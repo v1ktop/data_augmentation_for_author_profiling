@@ -1,0 +1,18 @@
+
+[erisk18_dev]
+training= D:/corpus/DepresionEriskCollections/2017/train/
+augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
+
+[erisk18_test]
+training= D:/corpus/DepresionEriskCollections/2017/train/
+test = D:/corpus/DepresionEriskCollections/2018/'
+augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
+
+[anorexia18_dev]
+training=D:/corpus/anorexia/2018/train/
+augmented=D:/corpus/anorexia/2018/train/augmented/
+
+[anorexia18_test]
+training= D:/corpus/anorexia/2018/train/
+test =D:/corpus/anorexia/2019/
+augmented = D:/corpus/anorexia/2018/train/augmented/
