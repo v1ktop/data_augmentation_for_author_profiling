@@ -34,6 +34,7 @@ class ProcessData(object):
                     key = tok[0] + tok[token_position]
                 else:
                     key = tok[token_position]
+                    key = key.strip(".xml")
                 full_file = os.path.abspath(os.path.join(dir_path, name))
                 dom = ET.parse(full_file, parser=ET.XMLParser(encoding="utf-8"))
                 writing = dom.findall('WRITING')
@@ -56,9 +57,11 @@ class ProcessData(object):
 
     @staticmethod
     def users_dict_to_txt(destination_directory, users):
+        # Create the directory if it does not exist.
+        os.makedirs(destination_directory, exist_ok=True)
         for user in users.keys():
             # Create a txt file with the user ID as the filename (same as the XML files)
             with open(os.path.join(destination_directory, user + ".txt"),
                       'w', encoding="utf-8") as txt_output_file:
-                txt_output_file.write(destination_directory[user])
+                txt_output_file.write(users[user])
         return True
