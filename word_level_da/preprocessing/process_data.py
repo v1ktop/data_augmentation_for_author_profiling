@@ -15,6 +15,110 @@ from .preprocessor import Preprocessor
 
 class ProcessData(object):
 
+    def load_txt_train(self, docs_dir, truth_dir, remove_end=True, chunking=False,
+                       max_len=500, min_len=1):
+        """
+
+
+        Parameters
+        ----------
+        docs_dir : TYPE
+            main files directory.
+        truth_dir : TYPE
+            main truth file directory.
+        remove_end : TYPE, optional
+            If True remove the label end_ from the text. The default is True.
+        chunking : TYPE, optional
+            DESCRIPTION. The default is False.
+        max_len : TYPE, optional
+            DESCRIPTION. The default is 500.
+        min_len : TYPE, optional
+            Minimun length of a document. The default is 100.
+        encode : TYPE, optional
+            DESCRIPTION. The default is True.
+
+        Returns
+        -------
+        docs_authors : list
+            the documents of the dataset
+        new_truths: list
+            the new truths values if chunking
+        author_ids : list
+            the id of every document.
+        truths: list
+            the original real truth after chunking.
+        doc_lens :  list
+            the number of chunks by document
+
+        """
+
+        doc_lens = []
+        new_truths = []
+        new_ids = []
+        docs_authors = []
+
+        author_ids, truths = self.read_golden_truth(truth_dir)
+        for i, author_id in enumerate(author_ids):
+            filename = author_id + ".txt"
+            file = open(os.path.join(docs_dir, filename))
+            text = file.read()
+
+            if remove_end:
+                text = text.replace("end_", "")
+
+            if chunking:
+                posts = self.chunking_text(text.split(" "), max_len)
+                n_post = 0
+                for post in posts:
+                    if len(post) > min_len:
+                        n_post += 1
+                        docs_authors.append(" ".join(post))
+
+                        new_truths.append(truths[i])
+                        new_ids.append(author_ids[i])
+
+                doc_lens.append(n_post)
+            else:
+                docs_authors.append(text)
+
+            file.close()
+
+        if chunking:
+            return docs_authors, new_truths, new_ids, truths, doc_lens
+        else:
+            return docs_authors, new_truths, author_ids, truths, doc_lens
+
+    @staticmethod
+    def read_golden_truth(truth_path, separator="\t"):
+        """Load the truth
+
+        This function reads the truth from the TXT file
+
+        Args:
+            truth_path: The path of the truth file.
+            separator: the character used to separate the id from the label
+
+        Returns:
+            The a sorted list of ids and labels
+
+        """
+
+        temp_sorted_ids = []
+        temp_truths = []
+
+        with open(truth_path, 'r') as truth_file:
+            for line in sorted(truth_file):
+                line = line.rstrip('\n')
+                row = line.split(separator)
+                temp_sorted_ids.append(row[0])
+                temp_truths.append(row[1])
+
+        return temp_sorted_ids, temp_truths
+
+    @staticmethod
+    def chunking_text(string, lenght):
+        return (string[0 + i:lenght + i] for i in range(0, len(string), lenght))
+
     @staticmethod
     def load_xml_files_erisk(local_dir, token_position=0):
         """
