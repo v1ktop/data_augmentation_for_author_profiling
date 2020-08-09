@@ -1,18 +1,30 @@
 
-[erisk18_dev]
-training= D:/corpus/DepresionEriskCollections/2017/train/
-augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
+[global]
+folder_name=prep_chunks
+truth_name=golden_truth.txt
 
-[erisk18_test]
+[depression18_local]
 training= D:/corpus/DepresionEriskCollections/2017/train/
 test = D:/corpus/DepresionEriskCollections/2018/'
 augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
 
-[anorexia18_dev]
+[anorexia18_local]
 training=D:/corpus/anorexia/2018/train/
-augmented=D:/corpus/anorexia/2018/train/augmented/
-
-[anorexia18_test]
-training= D:/corpus/anorexia/2018/train/
 test =D:/corpus/anorexia/2019/
 augmented = D:/corpus/anorexia/2018/train/augmented/
+
+[depresion19_local]
+training = D:/corpus/DepresionEriskCollections/2019/train/
+test = D:/corpus/DepresionEriskCollections/2019/test/
+training_folder=prep_chunks_filtered
+training_file=golden_truth_filtered.txt
+test_folder=prep_chunks
+test_file=golden_truth.txt
+
+[depresion19_drive]
+training = /content/drive/My Drive/Data/depresion/2019/train/
+test = /content/drive/My Drive/Data/depresion/2019/test/
+training_folder=prep_chunks_filtered
+training_file=golden_truth_filtered.txt
+test_folder=prep_chunks
+test_file=golden_truth.txt

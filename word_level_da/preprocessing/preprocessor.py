@@ -3,17 +3,11 @@ This class is intended to preprocess raw data
 """
 
 import re
-import emoji
-import nltk
-import unidecode
 from nltk.tokenize import RegexpTokenizer
-from nltk import word_tokenize
-from nltk.corpus import stopwords
-from nltk.tokenize.casual import TweetTokenizer
 
 
 class Preprocessor(object):
-
+    FLAGS = re.MULTILINE | re.DOTALL
     def __init__(self):
         self.nltk_tokenizer = RegexpTokenizer(
             "\\#+[\\w_]+[\\w\\'_\\-]*[\\w_]+|@[\\w_]+|[a-zA-Z'ÁÉÍÓÚáéíóúñÑüÜ]+-*[a-zA-Z'ÁÉÍÓÚáéíóúñÑüÜ]+|["
@@ -26,6 +20,11 @@ class Preprocessor(object):
         :param text: raw text
         :return: string object text without punctuation
         """
+
+        def re_sub(pattern, repl):
+            return re.sub(pattern, repl, text, flags=self.FLAGS)
+
+        text = re_sub(r"https?:\/\/\S+\b|www\.(\w+\.)+\S*", " http_ ")
         text1 = self.nltk_tokenizer.tokenize(text.lower())
         text2 = self.clean_text(text1)
 

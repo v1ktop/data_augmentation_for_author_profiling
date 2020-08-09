@@ -1,3 +1,4 @@
 *.ini
 \.idea
 /notebooks/.ipynb_checkpoints/
+/word_level_da/obj/

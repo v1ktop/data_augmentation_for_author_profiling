@@ -2,16 +2,14 @@
 Execute this script to augment your data locally
 
 """
-
 import utils
 import os
-import nltk
 import numpy as np
 from collections import defaultdict
-from preprocesing.load_datasets import Dataset
-from preprocesing import process_data_files
-from augmentation.syn_rep import SynRep
-from augmentation.select_candidates import select_docs
+from word_level_da.preprocessing.load_data import Dataset
+from word_level_da.preprocessing.process_data import ProcessData
+from word_level_da.augmentation.syn_rep import SynRep
+from word_level_da.augmentation.select_candidates import select_docs
 
 GLOVE_DIR= "D:/Models/glove/glove.42B/glove.42B.300d.txt"
 
@@ -136,10 +134,10 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
 
         labels_to_save = ["1"] * len(uniques_ids)
 
-        new_ids = process_data_files.write_labels(ids_to_aug, labels_to_save, n_augs, complete_out_dir, prefix,
+        new_ids = ProcessData.write_labels(ids_to_aug, labels_to_save, n_augs, complete_out_dir, prefix,
                                                   dataset=dataset_key)
 
-        process_data_files.plain_docs_to_txt(new_ids, augmented_docs, complete_out_dir, prefix)
+        ProcessData.plain_docs_to_txt(new_ids, augmented_docs, complete_out_dir, prefix)
 
         stats_words = syn_augmented.get_stats_words()
         stats_rep = syn_augmented.get_stats_words_rep()
