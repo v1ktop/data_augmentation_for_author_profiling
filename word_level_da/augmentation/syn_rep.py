@@ -38,15 +38,11 @@ class SynRep(object):
 
     def __init__(self, glove_file=r"D:\Models\glove\glove.6B\glove.6B.100d.txt", lang="en",
                  replace="wordnet", load_embedding=False, load_obj=False, obj_dir=None, voc_name=None,
-                 pos_file=None, analogy_file=None,
-                 java_path=r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath",
-                 jar="D:/Models/stanford-postagger2018/stanford-postagger-3.9.2.jar",
-                 model="D:/Models/stanford-postagger2018/models/wsj-0-18-left3words-nodistsim.tagger"):
+                 pos_file=None, analogy_file=None):
         """
 
         :type replace: object
         """
-        os.environ["JAVAHOME"] = java_path
         self.reps_by_doc = None
         self.words_by_doc = None
         if load_obj and replace == "glove":
@@ -68,7 +64,6 @@ class SynRep(object):
         self.stop_words["http"] = True
         self.stop_words["tag"] = True
         self.stop_words["end_"] = True
-        self.pos_tagger = StanfordPOSTagger(model, jar, encoding="utf-8")
 
         if load_obj and replace == "relation":
             self.POS_OF_WORD = ProcessData.load_obj(obj_dir, pos_file)
@@ -84,7 +79,7 @@ class SynRep(object):
 
     def augment_post(self, post, num_aug=1, method="Over",
                      doc_index=0, p_select=0.5, p_replace=0.5,
-                     from_class=None, to_class=None, mean=10, std=10):
+                     from_class=None, to_class=None):
 
         original_tokens = word_tokenize(post)
 
@@ -92,12 +87,11 @@ class SynRep(object):
         self.words_by_doc[doc_index] += num_words
         a_words = []
         if method == "Rel_0" or method == "Rel_1":
-            a_words, n_rep = self.without_replacement(original_tokens, num_aug, from_class, to_class,
-                                                      mean, std)
+            a_words, n_rep = self.without_replacement(original_tokens, num_aug, from_class, to_class)
         if method == "Thesaurus":
             a_words, n_rep = self.random(original_tokens, num_aug, p_select, p_replace)
         if method == "Xi" or method == "Context_1":
-            a_words, n_rep = self.without_replacement(original_tokens, num_aug, mean=p_select, std=std)
+            a_words, n_rep = self.without_replacement(original_tokens, num_aug, p_select=p_select )
         if method == "Over":
             for _ in range(num_aug):
                 a_words.append(' '.join(original_tokens))
@@ -163,7 +157,7 @@ class SynRep(object):
 
         return augmented_sentences, all_replaced
 
-    def without_replacement(self, words=[], n_docs=1, from_class="", to_classes=["", "", "", "", ""], mean=32, std=10):
+    def without_replacement(self, words=[], n_docs=1, from_class="", to_classes=["", "", "", "", ""], p_select=0.2):
         """
         augmented_sentences : TYPE
             DESCRIPTION.
@@ -179,9 +173,7 @@ class SynRep(object):
         """
         num_words = len(words)
 
-        # n_sr = self.rng.normal(mean, std, n_docs)
-
-        n_sr = np.random.geometric(mean, n_docs)
+        n_sr = np.random.geometric(p_select, n_docs)
 
         perm_inx = np.random.permutation(num_words)
 
@@ -208,7 +200,7 @@ class SynRep(object):
                 if len(to_classes) > 1:
                     to_class = to_classes[new_s - len(to_classes)]
 
-                if (len(to_classes) == 1):
+                if len(to_classes) == 1:
                     to_class = to_classes[0]
 
             while real_replaced < words_to_replace and len(words) > 1:
@@ -348,7 +340,7 @@ class SynRep(object):
         for i, w in enumerate(word_list):
             if self.replace == "glove":
                 self.get_close_vector(w)
-            if self.replace == "operation":
+            if self.replace == "relation":
                 for key in to_class:
                     self.word_list_translation(w, key)
 
@@ -366,7 +358,7 @@ class SynRep(object):
 
         ProcessData.save_obj(self.obj_dir, self.pos_file, self.POS_OF_WORD)
 
-        if self.replace == "operation":
+        if self.replace == "relation":
             ProcessData.save_obj(self.obj_dir, self.word_file, self.WORD_TOPIC_TRANSLATION)
         else:
             ProcessData.save_obj(self.obj_dir, self.vocab_file, self.vocab)

@@ -11,7 +11,7 @@ from word_level_da.preprocessing.process_data import ProcessData
 from word_level_da.augmentation.syn_rep import SynRep
 from word_level_da.augmentation.select_candidates import select_docs
 
-GLOVE_DIR= "D:/Models/glove/glove.42B/glove.42B.300d.txt"
+GLOVE_DIR = "D:/Models/glove/glove.42B/glove.42B.300d.txt"
 
 
 def augment_by_docs_one_class(lan, output, glove_file, method="Over",
@@ -39,7 +39,8 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
     selection.get_top_words(confidence=p_confidence)
 
     if filter:
-        cand_ids, cand_labels, cand_docs = selection.select_by_ocurrence(max_ocurrence=min_ocurrence, obj_label=obj_label)
+        cand_ids, cand_labels, cand_docs = selection.select_by_ocurrence(max_ocurrence=min_ocurrence,
+                                                                         obj_label=obj_label)
     else:
         cand_ids, cand_labels, cand_docs = selection.select_by_class(obj_label=obj_label)
 
@@ -154,12 +155,13 @@ if __name__ == "__main__":
     """
     Over: Oversamplig
     Thesaurus: 
+    Xi
     Rel_1
     Rel_0
-    Xi
     
     """
-    method = "Over"
+    obj_dir = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
+    method = "Xi"
     dataset_key = "depresion19_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
@@ -186,11 +188,11 @@ if __name__ == "__main__":
                 analogy: for Context_1, Context_0
     """
 
-    augment_by_docs_one_class(lan=lang, output=output_dir,
-                       glove_file=GLOVE_DIR,
-                       label_to_aug=labels_dic,
-                        obj_label=1,
-                       labels=labels, method=method, replace="glove",
-                       n_docs=[i for i in range(2, 11)], filter=False,
-                       dataset_key=dataset_key, load_emb=False, load_obj=False, preproces_vocab=False,
-                       analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence=15)
+    augment_by_docs_one_class(lan=lang, output=output_dir, vocab_dir=obj_dir,
+                              glove_file=GLOVE_DIR,
+                              label_to_aug=labels_dic,
+                              obj_label=1,
+                              labels=labels, method=method, replace="glove",
+                              n_docs=[i for i in range(1, 11)], filter=False,
+                              dataset_key=dataset_key, load_emb=True, load_obj=True, preproces_vocab=True,
+                              analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence=15)

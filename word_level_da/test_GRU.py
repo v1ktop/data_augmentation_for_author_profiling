@@ -41,7 +41,7 @@ if __name__ == "__main__":
     drop = 0.2
     lr = 1e-3
     model = "rnn-fixed"
-    AUGMENTED=False
+    AUGMENTED = False
 
     logger = utils.configure_root_logger(prefix_name=key + "_")
     utils.set_working_directory()
@@ -85,12 +85,12 @@ if __name__ == "__main__":
 
             if AUGMENTED:
                 docs, l_docs, ids, useless_data = data.get_dataset(folder_name=folder, truth_name=truth_file,
-                                                               partition="augmented")
+                                                                   partition="augmented")
                 new_training = np.append(training[0], docs)
                 new_labels = np.append(training[1], l_docs)
             else:
-                new_training=training[0]
-                new_labels=training[1]
+                new_training = training[0]
+                new_labels = training[1]
 
             info = bi_gru.buil_model(((new_training, new_labels), (test[0], test[1])), layers, nodes, dim, drop,
                                      max_features,
