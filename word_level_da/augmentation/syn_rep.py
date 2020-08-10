@@ -292,7 +292,8 @@ class SynRep(object):
                 self.vocab[word] = syn
                 self.words_with_vec += 1
             except KeyError:
-                self.vocab[word] = [(word, 0)]
+                syn = (word, 0)
+                self.vocab[word] = [syn]
         return syn
 
     def get_synonyms_wordnet(self, word):

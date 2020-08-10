@@ -156,12 +156,13 @@ if __name__ == "__main__":
     Over: Oversamplig
     Thesaurus: 
     Xi
+    Context_1
     Rel_1
     Rel_0
     
     """
     obj_dir = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
-    method = "Xi"
+    method = "Rel_1"
     dataset_key = "depresion19_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
@@ -194,5 +195,5 @@ if __name__ == "__main__":
                               obj_label=1,
                               labels=labels, method=method, replace="glove",
                               n_docs=[i for i in range(1, 11)], filter=False,
-                              dataset_key=dataset_key, load_emb=True, load_obj=True, preproces_vocab=True,
+                              dataset_key=dataset_key, load_emb=False, load_obj=True, preproces_vocab=False,
                               analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence=15)

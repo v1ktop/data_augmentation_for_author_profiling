@@ -16,6 +16,7 @@ augmented = D:/corpus/anorexia/2018/train/augmented/
 [depresion19_local]
 training = D:/corpus/DepresionEriskCollections/2019/train/
 test = D:/corpus/DepresionEriskCollections/2019/test/
+augmented=D:/corpus/DepresionEriskCollections/2019/train/augmented/
 training_folder=prep_chunks_filtered_neg_only
 training_file=golden_truth_filtered.txt
 test_folder=prep_chunks
