@@ -17,6 +17,10 @@ from datetime import datetime
 from word_level_da import utils
 from word_level_da.preprocessing.load_data import Dataset
 from word_level_da.classifier.train_sequence_model import seq_model
+import os
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0,7"
 
 warnings.filterwarnings("ignore")
 

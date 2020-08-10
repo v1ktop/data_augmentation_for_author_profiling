@@ -162,12 +162,12 @@ if __name__ == "__main__":
     
     """
     obj_dir = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
-    method = "Rel_1"
+    method = "Rel_0"
     dataset_key = "depresion19_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
 
-    labels_dic = {"depressed": ["anxious", "frustrated", "unhappy", "despondent", "discouraged"]}
+    labels_dic = {"happiness": ["anxious", "frustrated", "unhappy", "despondent", "discouraged"]}
     labels = {0: "happiness", 1: "depressed"}
     # labels={0:"healthy", 1:"anorexic"}
     # labels_dic={"healthy":["bulimic", "underweight", "obese", "malnourished", "unhealthy"]}
@@ -178,9 +178,9 @@ if __name__ == "__main__":
 
     logger.info("Running data augmentation for the dataset: %s", dataset_key)
     logger.info("Method: %s", method)
-    logger.info("Labels: %s", labels_dic[labels[1]])
+    logger.info("Labels: %s", labels_dic[labels[0]])
 
-    p_select = 0.2
+    p_select = 0.5
 
     """
         replace:
@@ -192,8 +192,8 @@ if __name__ == "__main__":
     augment_by_docs_one_class(lan=lang, output=output_dir, vocab_dir=obj_dir,
                               glove_file=GLOVE_DIR,
                               label_to_aug=labels_dic,
-                              obj_label=1,
-                              labels=labels, method=method, replace="glove",
-                              n_docs=[i for i in range(1, 11)], filter=False,
-                              dataset_key=dataset_key, load_emb=False, load_obj=True, preproces_vocab=False,
-                              analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence=15)
+                              obj_label=0,
+                              labels=labels, method=method, replace="relation",
+                              n_docs=[i for i in range(1, 11)], filter=True,
+                              dataset_key=dataset_key, load_emb=True, load_obj=True, preproces_vocab=True,
+                              analogy_file="r0_" + dataset_key, p_aug=p_select, min_ocurrence=15)

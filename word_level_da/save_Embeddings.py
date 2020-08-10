@@ -3,6 +3,7 @@
 Created on Sat Jun 15 16:09:47 2019
 
 @author: v1kto
+
 """
 from tensorflow.keras.preprocessing import text
 import warnings
@@ -32,23 +33,23 @@ if __name__ == "__main__":
 
     data = Dataset(key=key, doc_len=len_doc, min_len=int(len_doc / 2), chunking=True, remove_end=True)
 
-    methods = ["Base"]
+    methods = ["Xi"]
 
     n_docs = [i for i in range(1, 11)]
 
-    we_name = "WE_" + key.split(" ")[0]
+    we_name = "WE_" + key.split("_")[0]
     ft = fasttext.load_model(FAST300)
-    folder = "prep_chunks_filtered"
-    truth_file = "golden_truth_filtered.txt"
+    #folder = "prep_chunks_filtered"
+    #truth_file = "golden_truth_filtered.txt"
 
     for augmentation_method in methods:
         for n in n_docs:
             prefix = augmentation_method + str(n)
-            # folder = augmentation_method + "/" + prefix
-            # truth_file = augmentation_method + "/" + prefix + ".txt"
+            folder = augmentation_method + "/" + prefix
+            truth_file = augmentation_method + "/" + prefix + ".txt"
 
             docs, l_docs, ids, useless_data = data.get_dataset(folder_name=folder, truth_name=truth_file,
-                                                               partition="training")
+                                                               partition="augmented")
 
             # Create vocabulary with training texts.
             tokenizer = text.Tokenizer(num_words=150000)

@@ -87,7 +87,7 @@ class SynRep(object):
         self.words_by_doc[doc_index] += num_words
         a_words = []
         if method == "Rel_0" or method == "Rel_1":
-            a_words, n_rep = self.without_replacement(original_tokens, num_aug, from_class, to_class)
+            a_words, n_rep = self.without_replacement(original_tokens, num_aug, from_class, to_class, p_select=p_select)
         if method == "Thesaurus":
             a_words, n_rep = self.random(original_tokens, num_aug, p_select, p_replace)
         if method == "Xi" or method == "Context_1":
