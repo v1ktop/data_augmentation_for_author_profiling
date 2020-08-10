@@ -20,7 +20,7 @@ from word_level_da.classifier.train_sequence_model import seq_model
 
 warnings.filterwarnings("ignore")
 
-OBJ_DIR = "D:/weights_rnn/"
+OBJ_DIR = "D:/weights_rnn/neg_only/"
 VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
 FAST300 = "D:/Models/fasttex/cc.en.300.bin"
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     logger.info("Number of documents in training set: %s", len(training[0]))
     logger.info("Number of documents in test set: %s", len(test[0]))
 
-    bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=False,
+    bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=True,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
     methods = ["Base"]

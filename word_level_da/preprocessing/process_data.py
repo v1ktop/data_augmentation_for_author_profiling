@@ -184,6 +184,26 @@ class ProcessData(object):
         return True
 
     @staticmethod
+    def write_augmented_labels(docs_ids, labels, n_aug, save_dir, prefix):
+        os.makedirs(save_dir, exist_ok=True)
+        string_labels = []
+        new_authors_ids = []
+
+        c = 0
+        for docs_id, label, num_aug in zip(docs_ids, labels, n_aug):
+            for i in range(num_aug):
+                newid = docs_id + prefix + str(c) + str(i)
+                chain = newid + "\t" + str(label)
+
+                c += 1
+                string_labels.append(chain)
+                new_authors_ids.append(newid)
+        with open(os.path.join(save_dir, prefix + ".txt"),
+                  'w', encoding="utf-8") as txt_output_file:
+            txt_output_file.write('\n'.join(string_labels))
+        return new_authors_ids
+
+    @staticmethod
     def plain_docs_to_txt(author_ids, list_docs, destination_directory, prefix):
         txts_destination_directory = os.path.join(destination_directory, prefix)
 

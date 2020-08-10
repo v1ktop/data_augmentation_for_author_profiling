@@ -11,8 +11,8 @@ from nltk.tokenize import word_tokenize
 from gensim.test.utils import get_tmpfile
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
-from preprocesing import process_data_files
-from classifier.FeactureExtraction import feature_extraction
+from word_level_da.preprocessing.process_data import ProcessData
+from word_level_da.classifier.feature_extraction import FeatureExtraction
 
 # random.seed(1)
 
@@ -50,7 +50,7 @@ class SynRep(object):
         self.reps_by_doc = None
         self.words_by_doc = None
         if load_obj and replace == "glove":
-            self.vocab = process_data_files.load_obj(obj_dir, voc_name)
+            self.vocab = ProcessData.load_obj(obj_dir, voc_name)
 
         if load_embedding:
             word2vec_glove_file = get_tmpfile("glove2.txt")
@@ -69,24 +69,22 @@ class SynRep(object):
         self.stop_words["tag"] = True
         self.stop_words["end_"] = True
         self.pos_tagger = StanfordPOSTagger(model, jar, encoding="utf-8")
-        
+
         if load_obj and replace == "relation":
-            self.POS_OF_WORD = process_data_files.load_obj(obj_dir, pos_file)
-            self.WORD_TOPIC_TRANSLATION = process_data_files.load_obj(obj_dir, analogy_file)
+            self.POS_OF_WORD = ProcessData.load_obj(obj_dir, pos_file)
+            self.WORD_TOPIC_TRANSLATION = ProcessData.load_obj(obj_dir, analogy_file)
 
         self.obj_dir = obj_dir
         self.pos_file = pos_file
         self.word_file = analogy_file
         self.vocab_file = voc_name
         self.replace = replace
-        self.top_words={}
+        self.top_words = {}
         self.rng = np.random.default_rng()
-        
-        
-    
 
     def augment_post(self, post, num_aug=1, method="Over",
-                     doc_index=0, p_select=0.5, p_replace=0.5, from_class=None, to_class=None, mean=10, std=10):
+                     doc_index=0, p_select=0.5, p_replace=0.5,
+                     from_class=None, to_class=None, mean=10, std=10):
 
         original_tokens = word_tokenize(post)
 
@@ -94,7 +92,7 @@ class SynRep(object):
         self.words_by_doc[doc_index] += num_words
         a_words = []
         if method == "Rel_0" or method == "Rel_1":
-            a_words, n_rep = self.without_replacement(original_tokens , num_aug , from_class,  to_class,
+            a_words, n_rep = self.without_replacement(original_tokens, num_aug, from_class, to_class,
                                                       mean, std)
         if method == "Thesaurus":
             a_words, n_rep = self.random(original_tokens, num_aug, p_select, p_replace)
@@ -111,8 +109,6 @@ class SynRep(object):
             print(doc_index)
 
         return a_words, n_rep
-    
-        
 
     def random(self, words, n_docs=1, p_select=0.5, p_replace=0.5):
         num_words = len(words)
@@ -121,13 +117,12 @@ class SynRep(object):
 
         augmented_sentences = []
         all_replaced = 0
-        
-        #words=[w[0] for w in pos_original_tokens]
-       
+
+        # words=[w[0] for w in pos_original_tokens]
 
         for new_s in range(n_docs):
             new_words = words.copy()
-        
+
             real_replaced = 0
             iterations = 0
 
@@ -150,11 +145,10 @@ class SynRep(object):
 
                     if self.replace == "glove":
                         new_word = synonyms[index_emb][0]
-                        
+
                     else:
                         new_word = synonyms[index_emb]
-                        
-                    
+
                     new_words[random_index] = new_word
                     real_replaced += 1
                     all_replaced += 1
@@ -166,7 +160,6 @@ class SynRep(object):
 
             # print(new_words)
             augmented_sentences.append(' '.join(new_words))
-            
 
         return augmented_sentences, all_replaced
 
@@ -185,9 +178,8 @@ class SynRep(object):
 
         """
         num_words = len(words)
-        
-        
-        #n_sr = self.rng.normal(mean, std, n_docs)
+
+        # n_sr = self.rng.normal(mean, std, n_docs)
 
         n_sr = np.random.geometric(mean, n_docs)
 
@@ -199,7 +191,7 @@ class SynRep(object):
         replace_dict = dict()
         to_class = None
 
-        #words=[w[0] for w in pos_original_tokens]
+        # words=[w[0] for w in pos_original_tokens]
 
         pos_original_tokens = nltk.pos_tag(words)
 
@@ -207,38 +199,31 @@ class SynRep(object):
             new_words = words.copy()
             real_replaced = 0
             tolerance = 0
-            words_to_replace=n_sr[new_s]
-            
+            words_to_replace = n_sr[new_s]
+
             if words_to_replace > num_words:
-                words_to_replace=num_words
-            
-            
+                words_to_replace = num_words
+
             if self.replace == "relation":
-                if len(to_classes)>1:
-                    to_class=to_classes[new_s-len(to_classes)]
-                    
-            
-                if(len(to_classes)==1):
-                    to_class=to_classes[0]
-            
-            
-            
-            
+                if len(to_classes) > 1:
+                    to_class = to_classes[new_s - len(to_classes)]
+
+                if (len(to_classes) == 1):
+                    to_class = to_classes[0]
+
             while real_replaced < words_to_replace and len(words) > 1:
 
                 token = pos_original_tokens[perm_inx[current_idx]]
                 current_word_pos = token[1]
                 current_word = token[0]
 
-                if current_word_pos in self.pos_dict and current_word not in self.top_words and current_word\
+                if current_word_pos in self.pos_dict and current_word not in self.top_words and current_word \
                         not in self.stop_words:
-                            
-                            
-                    if self.replace=="relation":
-                        key = from_class+'-'+to_class
+
+                    if self.replace == "relation":
+                        key = from_class + '-' + to_class
                     else:
-                        key=None
-                    
+                        key = None
 
                     candidates = self.get_synonyms(current_word, key)
 
@@ -299,9 +284,9 @@ class SynRep(object):
             if word in self.vocab.keys():
                 synonyms = [x[0] for x in self.vocab[word]]
 
-        if self.replace=="relation":
+        if self.replace == "relation":
             if word in self.WORD_TOPIC_TRANSLATION[key]:
-                synonyms=self.WORD_TOPIC_TRANSLATION[key][word]  
+                synonyms = self.WORD_TOPIC_TRANSLATION[key][word]
 
         return synonyms
 
@@ -348,12 +333,12 @@ class SynRep(object):
 
     def build_vocab_xi2(self, docs_train, truths_train, k=100, idf=False):
 
-        extractor = feature_extraction(docs_train=docs_train, use_idf=idf)
+        extractor = FeatureExtraction(docs_train=docs_train, use_idf=idf)
 
         self.word_list = extractor.get_chi_2(truths_train, k=k)
 
     def build_all_vocab(self, docs_train, to_class=None):
-        extractor = feature_extraction(docs_train=docs_train, method="count")
+        extractor = FeatureExtraction(docs_train=docs_train, method="count")
         vocab = extractor.cv.vocabulary_
         word_list = []
         for w in vocab:
@@ -379,12 +364,12 @@ class SynRep(object):
 
     def save_files(self):
 
-        process_data_files.save_obj(self.obj_dir, self.pos_file, self.POS_OF_WORD)
+        ProcessData.save_obj(self.obj_dir, self.pos_file, self.POS_OF_WORD)
 
         if self.replace == "operation":
-            process_data_files.save_obj(self.obj_dir, self.word_file, self.WORD_TOPIC_TRANSLATION)
+            ProcessData.save_obj(self.obj_dir, self.word_file, self.WORD_TOPIC_TRANSLATION)
         else:
-            process_data_files.save_obj(self.obj_dir, self.vocab_file, self.vocab)
+            ProcessData.save_obj(self.obj_dir, self.vocab_file, self.vocab)
 
     def get_stats_words(self):
         return self.compute_statistics(self.words_by_doc)
@@ -398,4 +383,4 @@ class SynRep(object):
         return values
 
     def load_top_words(self, file_name):
-        self.top_words=process_data_files.load_obj(self.obj_dir, file_name)
+        self.top_words = ProcessData.load_obj(self.obj_dir, file_name)

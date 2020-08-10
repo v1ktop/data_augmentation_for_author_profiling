@@ -2,10 +2,10 @@
 Execute this script to augment your data locally
 
 """
-import utils
 import os
 import numpy as np
 from collections import defaultdict
+from word_level_da import utils
 from word_level_da.preprocessing.load_data import Dataset
 from word_level_da.preprocessing.process_data import ProcessData
 from word_level_da.augmentation.syn_rep import SynRep
@@ -21,7 +21,8 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
                               load_emb=True, load_obj=False, preproces_vocab=False,
                               vocab_dir="D:/v1ktop/Drive/REPOS/augmentation_ap/obj/",
                               analogy_file="file",
-                              p_confidence=0.001, min_ocurrence=20, doc_len=64, p_aug=0.1, mean=32, std=10
+                              filter=True,
+                              p_confidence=0.001, min_ocurrence=20, doc_len=64, p_aug=0.1
                               ):
     logger.info("Loading positive documents")
 
@@ -30,13 +31,17 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
 
     ##Get dataset in chunks
     docs_train, truths_train, author_ids_train, (truths, lens) = data.get_dataset(partition="training",
-                                                                                  folder_name="prep_chunks_joined",
-                                                                                  truth_name="train_golden_truth_joined.txt",
-                                                                                  tag=False)
+                                                                                  folder_name="prep_chunks",
+                                                                                  truth_name="golden_truth.txt",
+                                                                                  )
 
     selection = select_docs(docs_train, truths_train, author_ids_train)
     selection.get_top_words(confidence=p_confidence)
-    cand_ids, cand_labels, cand_docs = selection.select_by_ocurrence(max_ocurrence=min_ocurrence, obj_label=obj_label)
+
+    if filter:
+        cand_ids, cand_labels, cand_docs = selection.select_by_ocurrence(max_ocurrence=min_ocurrence, obj_label=obj_label)
+    else:
+        cand_ids, cand_labels, cand_docs = selection.select_by_class(obj_label=obj_label)
 
     logger.info("Number of selected docs %d", len(cand_ids))
 
@@ -102,13 +107,13 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
                                                                   num_aug=num_aug, method=method, doc_index=i,
                                                                   from_class=current_label,
                                                                   to_class=label_to_aug[current_label], p_select=p_aug,
-                                                                  mean=mean, std=std)
+                                                                  )
 
                 else:
                     new_chunks, nrep = syn_augmented.augment_post(post=doc,
                                                                   num_aug=num_aug, method=method, doc_index=i,
                                                                   from_class=None,
-                                                                  to_class=None, p_select=p_aug, mean=mean, std=std)
+                                                                  to_class=None, p_select=p_aug)
 
                 new_docs.append(new_chunks)
 
@@ -134,15 +139,13 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
 
         labels_to_save = ["1"] * len(uniques_ids)
 
-        new_ids = ProcessData.write_labels(ids_to_aug, labels_to_save, n_augs, complete_out_dir, prefix,
-                                                  dataset=dataset_key)
+        new_ids = ProcessData.write_augmented_labels(ids_to_aug, labels_to_save, n_augs,
+                                                     complete_out_dir, prefix)
 
         ProcessData.plain_docs_to_txt(new_ids, augmented_docs, complete_out_dir, prefix)
 
         stats_words = syn_augmented.get_stats_words()
         stats_rep = syn_augmented.get_stats_words_rep()
-        # logger.info("Number of words by doc: %s", stats_words)
-        # logger.info("Number of words replaced: %s", stats_rep)
         data = [dataset_key, method, num_aug, stats_words["mean"], stats_rep["mean"]]
         logger.info(data)
 
@@ -151,12 +154,13 @@ if __name__ == "__main__":
     """
     Over: Oversamplig
     Thesaurus: 
-    Context_1
-    Context_0
-    Xi:
+    Rel_1
+    Rel_0
+    Xi
+    
     """
-    method = "Xi"
-    dataset_key = "erisk18_dev"
+    method = "Over"
+    dataset_key = "depresion19_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
 
@@ -165,8 +169,7 @@ if __name__ == "__main__":
     # labels={0:"healthy", 1:"anorexic"}
     # labels_dic={"healthy":["bulimic", "underweight", "obese", "malnourished", "unhealthy"]}
 
-    output_dir = "D:/corpus/DepresionEriskCollections/2017/train/augmented_both"
-    # output_dir="D:/corpus/anorexia/2018/train/augmented_normal/"
+    output_dir = "D:/corpus/DepresionEriskCollections/2019/train/augmented"
     logger = utils.configure_root_logger(prefix_name=method + "_" + dataset_key)
     utils.set_working_directory()
 
@@ -184,11 +187,10 @@ if __name__ == "__main__":
     """
 
     augment_by_docs_one_class(lan=lang, output=output_dir,
-                       glove_file=GLOVE_DIR_TEST,
+                       glove_file=GLOVE_DIR,
                        label_to_aug=labels_dic,
+                        obj_label=1,
                        labels=labels, method=method, replace="glove",
-                       n_docs=[i for i in range(1, 11)],
-                       dataset_key=dataset_key, load_emb=False, load_obj=True, preproces_vocab=False,
-                       analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence={0: 25, 1: 20}, mean=6,
-                       std=2
-                       )
+                       n_docs=[i for i in range(2, 11)], filter=False,
+                       dataset_key=dataset_key, load_emb=False, load_obj=False, preproces_vocab=False,
+                       analogy_file="l0_word_" + dataset_key, p_aug=p_select, min_ocurrence=15)

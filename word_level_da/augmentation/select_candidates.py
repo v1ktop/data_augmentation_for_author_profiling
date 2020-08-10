@@ -39,6 +39,19 @@ class select_docs(object):
                         break
         return cand_ids, cand_labels, cand_docs
 
+    def select_by_class(self, obj_label=1):
+        cand_ids = []
+        cand_labels = []
+        cand_docs = []
+
+        for id_doc, label, doc in zip(self.ids, self.labels, self.docs):
+            if label == obj_label:
+                cand_ids.append(id_doc)
+                cand_labels.append(label)
+                cand_docs.append(doc)
+
+        return cand_ids, cand_labels, cand_docs
+
     def select_by_ocurrence_test_set(self, max_ocurrence=2):
         cand_ids = []
         cand_labels = []
@@ -55,3 +68,5 @@ class select_docs(object):
                     cand_docs.append(doc)
                     break
         return cand_ids, cand_labels, cand_docs
+
+
