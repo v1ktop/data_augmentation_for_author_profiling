@@ -24,7 +24,7 @@ import os
 
 warnings.filterwarnings("ignore")
 
-OBJ_DIR = "D:/weights_rnn/neg_only/"
+OBJ_DIR = "D:/weights_rnn/trainedfixed/"
 VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
 FAST300 = "D:/Models/fasttex/cc.en.300.bin"
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     len_doc = 64
     kernel = 1
     max_features = 150000
-    patience = 3
+    patience = 6
     drop = 0.2
     lr = 1e-3
     model = "cnn"
@@ -103,11 +103,11 @@ if __name__ == "__main__":
                                      vocab_dir=VOCAB_DIR, key=key.split("_")[0])
 
             info[2] = umbral
-            for i in range(10):
-                score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=True, save_weigths=False,
+            for i in range(3):
+                score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False,
                                            weights_name="depression19" + prefix + model + str(i) + ".h5",
                                            ad_data=(test[3]),
-                                           validation=False, monitor_measure="val_loss",
+                                           validation=True, monitor_measure="val_loss",
                                            method=augmentation_method + str(i),
                                            umbral=umbral, score_method=score_method, q=q)
 

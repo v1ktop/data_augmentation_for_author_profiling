@@ -148,18 +148,20 @@ class seq_model(object):
         return info
 
     def train_model(self, learning_rate=1e-4, epochs=20, batch_size=16, patience=3,
-                    load_weights=False, save_weigths=True, weights_name=None, ad_data=([], []),
+                    load_weights=False, weights_name=None, ad_data=([], []),
                     validation=True, monitor_measure="val_loss", method="Base", umbral=0.5,
                     score_method="avg", q=.98):
+
 
         loss = self.get_loss_type(self.num_classes)
 
         # print("Loss Type: ", loss)
         optimizer = tf.keras.optimizers.Adam(lr=learning_rate)
-        model_tmp = self.model
 
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
-        self.model.summary()
+        model_temp = tf.keras.models.clone_model(self.model)
+
+        model_temp.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
+        model_temp.summary()
 
         initial_weights = os.path.join(self.weights_path, weights_name)
 
@@ -169,14 +171,14 @@ class seq_model(object):
                                                             save_best_only=True, mode='auto')]
 
         if load_weights:
-            self.model.load_weights(initial_weights)
+            model_temp.load_weights(initial_weights)
 
         # Train and validate model.
 
         history = None
 
         if validation:
-            history = self.model.fit(
+            history = model_temp.fit(
                 self.x_train,
                 self.train_labels,
                 epochs=epochs,
@@ -188,10 +190,10 @@ class seq_model(object):
             # Print results.
             history = history.history
 
-        model_tmp.load_weights(initial_weights)
-        model_tmp.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
+        model_temp.load_weights(initial_weights)
+        model_temp.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
 
-        y_pr_ = model_tmp.predict(self.x_val, batch_size=batch_size)
+        y_pr_ = model_temp.predict(self.x_val, batch_size=batch_size)
 
         # Predictions as integers before average
         # y_pr_ = (y_pr_ > umbral).astype(int)
@@ -230,6 +232,8 @@ class seq_model(object):
             score = np.append(score, new_history)
         else:
             score = [acc, f1[0], f1[1], f1[2]]
+
+        del model_temp
 
         return score
 
