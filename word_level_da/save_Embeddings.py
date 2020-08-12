@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     data = Dataset(key=key, doc_len=len_doc, min_len=int(len_doc / 2), chunking=True, remove_end=True)
 
-    methods = ["Xi"]
+    methods = ["Rel_1", "Thesaurus", "Rel_0"]
 
     n_docs = [i for i in range(1, 11)]
 

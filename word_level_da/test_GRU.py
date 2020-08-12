@@ -19,8 +19,8 @@ from word_level_da.preprocessing.load_data import Dataset
 from word_level_da.classifier.train_sequence_model import seq_model
 import os
 
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0,7"
+#os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+#os.environ["CUDA_VISIBLE_DEVICES"]="0,7"
 
 warnings.filterwarnings("ignore")
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     batch_size = 1024
     epochs = 20
     layers = 1
-    nodes = 256
+    nodes = 300
     dim = 300
     label_pos = 1
     len_doc = 64
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     patience = 3
     drop = 0.2
     lr = 1e-3
-    model = "rnn-fixed"
+    model = "cnn"
     AUGMENTED = False
 
     logger = utils.configure_root_logger(prefix_name=key + "_")
@@ -72,12 +72,12 @@ if __name__ == "__main__":
     logger.info("Number of documents in training set: %s", len(training[0]))
     logger.info("Number of documents in test set: %s", len(test[0]))
 
-    bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=True,
+    bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=False,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
-    methods = ["Base"]
-    n_docs = [i for i in range(1, 2)]
-    umbral = 0.5
+    methods = [ "Base"]
+    n_docs = [i for i in range(1,2)]
+    umbral = 0.4
     q = 75
     score_method = "avg"
     for augmentation_method in methods:
@@ -97,17 +97,17 @@ if __name__ == "__main__":
                 new_labels = training[1]
 
             info = bi_gru.buil_model(((new_training, new_labels), (test[0], test[1])), layers, nodes, dim, drop,
-                                     max_features,
+                                     max_features, kernel_size=[3,4,5],
                                      pretrained=True, embedding_trainable=False, bidirectional=True,
                                      seq_len=len_doc, emb_file=glove_file, class_imbanlance=True, algo=model,
                                      vocab_dir=VOCAB_DIR, key=key.split("_")[0])
 
             info[2] = umbral
             for i in range(10):
-                score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False, save_weigths=False,
+                score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=True, save_weigths=False,
                                            weights_name="depression19" + prefix + model + str(i) + ".h5",
                                            ad_data=(test[3]),
-                                           validation=True, monitor_measure="val_loss",
+                                           validation=False, monitor_measure="val_loss",
                                            method=augmentation_method + str(i),
                                            umbral=umbral, score_method=score_method, q=q)
 
