@@ -8,6 +8,7 @@ from __future__ import division
 from __future__ import print_function
 
 import fasttext.util
+import gc
 import tensorflow as tf
 import numpy as np
 import random as rn
@@ -234,7 +235,8 @@ class seq_model(object):
             score = [acc, f1[0], f1[1], f1[2]]
 
         del model_temp
-
+        gc.collect()
+        
         return score
 
     def get_loss_type(self, num_classes):

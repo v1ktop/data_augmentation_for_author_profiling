@@ -3,10 +3,15 @@
 folder_name=prep_chunks
 truth_name=golden_truth.txt
 
-[depression18_local]
+[depresion18_local]
 training= D:/corpus/DepresionEriskCollections/2017/train/
-test = D:/corpus/DepresionEriskCollections/2018/'
+test = D:/corpus/DepresionEriskCollections/2018/
 augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
+training_folder=prep_chunks_filtered
+training_file=golden_truth_filtered.txt
+test_folder=prep_chunks
+test_file=golden_truth.txt
+
 
 [anorexia18_local]
 training=D:/corpus/anorexia/2018/train/

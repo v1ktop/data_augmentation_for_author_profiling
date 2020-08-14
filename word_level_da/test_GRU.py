@@ -30,22 +30,22 @@ FAST300 = "D:/Models/fasttex/cc.en.300.bin"
 
 if __name__ == "__main__":
 
-    key = "depresion19_local"
+    key = "depresion18_local"
     glove_file = FAST300
     batch_size = 1024
     epochs = 20
     layers = 1
-    nodes = 300
+    nodes = 256
     dim = 300
     label_pos = 1
     len_doc = 64
     kernel = 1
     max_features = 150000
-    patience = 6
+    patience = 3
     drop = 0.2
     lr = 1e-3
-    model = "cnn"
-    AUGMENTED = False
+    model = "rnn-fixed"
+    AUGMENTED = True
 
     logger = utils.configure_root_logger(prefix_name=key + "_")
     utils.set_working_directory()
@@ -75,9 +75,9 @@ if __name__ == "__main__":
     bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=False,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
-    methods = [ "Base"]
-    n_docs = [i for i in range(1,2)]
-    umbral = 0.4
+    methods = ["Over"]
+    n_docs = [i for i in range(8,11)]
+    umbral = 0.5
     q = 75
     score_method = "avg"
     for augmentation_method in methods:
@@ -103,9 +103,9 @@ if __name__ == "__main__":
                                      vocab_dir=VOCAB_DIR, key=key.split("_")[0])
 
             info[2] = umbral
-            for i in range(3):
+            for i in range(1,3):
                 score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False,
-                                           weights_name="depression19" + prefix + model + str(i) + ".h5",
+                                           weights_name=key.split("_")[0] + prefix + model + str(i) + ".h5",
                                            ad_data=(test[3]),
                                            validation=True, monitor_measure="val_loss",
                                            method=augmentation_method + str(i),
