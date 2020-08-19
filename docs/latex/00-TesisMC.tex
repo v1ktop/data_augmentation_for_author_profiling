@@ -1,0 +1,317 @@
+%% ##############################################################################################
+%% Plantilla estándar (en el caso de que exista algo parecido a un estándar) para el documento de tesis para la maestría en ciencias computacionales del INAOEP.
+%% Fecha última modificación: 23 de agosto de 2010
+%% Editada por: R. Omar Chávez G.
+%% Nota: Cualquier mejora o modificación favor de comentarla y distribuirla.
+%% ----------------------------------------------------------------------------------------------
+%% Registro de modificaciones
+%% 
+%% ##############################################################################################
+
+\documentclass[12pt,letterpaper,spanish]{book}
+
+% para emcabezados y pies de página
+\usepackage{fancyhdr}
+
+% para usar de manera natural los acentos, tildes y así -- además del respectivo diccionario de español 
+\usepackage[utf8]{inputenc} 
+\usepackage[spanish,activeacute]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb} 
+
+% para tablas que se pasan de lanza, digo, de largas
+\usepackage{longtable} 
+
+% para incluir los apéndices
+\usepackage{appendix}
+
+% para incluir gráficas y subgráficas dentro de las gráficas etc., etc.
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% para definir algunos márgenes personalizados
+\usepackage{anysize}
+\marginsize{1.5in}{1in}{1in}{1in}
+\usepackage[nottoc]{tocbibind}
+\usepackage{setspace}
+
+% para tablas con celdas compartidas
+\usepackage{multirow}
+\usepackage{fancybox}
+
+% para incluir colores en texto o en celdas de las tablas
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage[table,xcdraw]{xcolor}
+
+% para el estilo natbib de bibliografías (sino lo usan no va)
+\usepackage{natbib}
+
+\usepackage{titlesec}
+
+% para incluir páginas de un archivo pdf
+\usepackage{pdfpages}
+
+%para incluir archivos SVG
+\usepackage{svg}
+
+
+%##############################################################################
+% para renombrar algunos títulos
+\renewcommand{\appendixname}{Apéndices}
+\renewcommand{\appendixtocname}{Apéndices}
+\renewcommand{\appendixpagename}{Apéndices}
+
+%##############################################################################
+% incluimos información personalizada para algunos valores de la plantilla
+\newcommand{\tstamp}{\small [\thepage]}
+\newcommand{\Escuela}{\scshape \scriptsize Coordinaci\'{o}n de Ciencias Computacionales}
+\newcommand{\Uni}{\scshape \scriptsize Instituto Nacional de Astrof\'{i}sica, \'{O}ptica y Electr\'{o}nica}
+\newcommand{\TEMA}{\scshape \scriptsize Aumento de datos para tareas relacionadas al perfilado de autor.}
+
+
+%##############################################################################
+% redefinimos los espacios para las figuras
+
+\newcommand{\figura}[5]{
+  \begin{figure}[#5]
+  \begin{center}
+  \includegraphics[#2]{#1}
+  \caption[#3]{#3}
+  \label{#4}
+  \end{center}
+  \end{figure}
+}
+%##############################################################################
+% redefinimos los espacios para las tablas
+\newenvironment{tabla}[2]{
+  \begin{table}[#2]
+  \begin{center}
+  \caption[#1]{#1}
+}{
+  \end{center}
+  \end{table}
+}
+
+%##############################################################################
+% renombramos algunas constantes para entornos matemáticos
+\def\sen{{\rm sen \ }}
+\def\cos{{\rm cos \ }}
+
+\def\a{\mathbf a}
+\def\b{\mathbf b}
+\def\c{\mathbf c}
+\def\d{\mathbf d}
+\def\e{\mathbf e}
+\def\ex{\mathrm e}
+\def\f{\mathbf f}
+\def\g{\mathbf g}
+\def\h{\mathbf h}
+\def\k{\mathbf k}
+\def\n{\mathbf n}
+\def\m{\mathbf m}
+\def\p{\mathbf p}
+\def\q{\mathbf q}
+\def\P{\mathbf P}
+\def\R{\mathbf R}
+\def\T{\mathbf T}
+\def\L{\mathbf L}
+\def\r{\mathbf r}
+\def\u{\mathbf u}
+\def\v{\mathbf v}
+\def\w{\mathbf w}
+\def\x{\mathbf x}
+\def\y{\mathbf y}
+\def\z{\mathbf z}
+\def\sen{{\rm sen \ }}
+
+%################################################################################
+% rebombramos las etiquetas para retuilizar la información antes ingresada
+\renewcommand{\labelenumi}{\textbf{\theenumi}.-}
+\renewcommand{\labelenumii}{\textbf{\theenumi}.-}
+\renewcommand{\labelenumiii}{\textbf{\theenumi}.-}
+\renewcommand{\labelenumiv}{\textbf{\theenumi}.-}
+
+
+
+%#################################################################################
+% especificamos casos extraodinarios para la división de palabras
+\hyphenation{es-pe-cia-li-dad} \hyphenation{ob-te-ner}
+\hyphenation{des-ple-gar}
+\hyphenation{original}
+\hyphenation{geo-gra-fi-ca} \hyphenation{do-cu-men-to}
+\hyphenation{do-cu-men-tos} 
+\hyphenation{e-va-lua-da}\hyphenation{pro-pues-ta}
+\hyphenation{tu-ris-mo}\hyphenation{pro-pues-to}
+\hyphenation{ma-yo-res}\hyphenation{des-cri-be}
+\hyphenation{re-le-van-cia}\hyphenation{pro-ble-ma}
+\hyphenation{ma-ne-ra}\hyphenation{co-rres-pon-de}
+\hyphenation{pro-pues-to}\hyphenation{re-tro-a-li-men-ta-cion}
+\hyphenation{si-mi-li-tud}\hyphenation{tradicional}\hyphenation{ordenamiento}
+\hyphenation{pu-bli-ca-cio-nes}\hyphenation{a-tri-bu-tos}
+\hyphenation{re-cu-pe-rar}\hyphenation{re-cu-pe-ra-das}
+
+% espaciado : 1 y 1/2
+\onehalfspacing
+
+% establecemos la enumeración para las equaciones y figuras
+\numberwithin{equation}{section}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+
+\setlength{\arrayrulewidth}{1pt}
+\setlength{\doublerulesep}{0mm}
+
+\sloppy
+\frenchspacing
+
+% redefinimos el comando para incrustar dos páginas vacías
+\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}}
+
+
+%#################################################################################
+% inicio del documento
+
+\begin{document}
+
+% incluimos el pdf con la portada (sólo la página 1) (la azul fea) como primera página de este documento
+% nota: debes modificar y compilar de manera separada el archivo portada.tex, luego compilar este documento para que incluya la versión modificada del PDF (portada.pdf)
+
+\includepdf[pages={1}]{portada.pdf}
+\clearemptydoublepage
+
+% incluimos el .tex que tiene la información para la contraportada (puede llamarse como desees, pero recuerda poner el nombre sin extensión)
+\include{contraportada}
+\clearemptydoublepage
+
+
+\frontmatter
+\pagestyle{fancyplain}
+
+
+
+%###############################################################################33
+% redefinimos los márgenes para el documento
+\setlength{\topmargin}{0.0cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\headheight}{0.5cm}
+
+\setlength{\marginparsep}{0mm}
+\setlength{\marginparwidth}{0cm}
+
+\setlength{\footskip}{1.5cm}
+
+  \setlength\paperheight {11in}
+  \setlength\paperwidth  {8.5in}
+
+  \setlength{\textwidth}{6in}
+  \setlength{\textheight}{8.5in}
+
+  \setlength{\marginparwidth}{0cm}
+  \setlength{\voffset}{0.0in}
+  \setlength{\hoffset}{0.0in}
+
+  \setlength{\evensidemargin}{0in} % margen par
+  \setlength{\oddsidemargin}{0.32in}  % margen impar
+ % \setlength{\oddsidemargin}{0in}  % margen impar
+
+
+
+%###################################################################################
+% especificamos el nombre en español para cada sección estándar de la tesis
+%\def\contentsname{\'{I}ndice General}
+\def\contentsname{Tabla de Contenido}
+\def\listfigurename{Lista de Figuras}
+\def\listtablename{Lista de Tablas}
+\def\bibname{Bibliografía}
+\def\indexname{\'{I}ndice Alfabético}
+\def\figurename{\bf \scriptsize Figura}
+\def\tablename{\bf \scriptsize Tabla}
+\def\partname{Parte}
+\def\chaptername{Cap\'{i}tulo~\thechapter}
+\def\appendixname{Ap\'{e}ndice}
+\def\abstractname{Resumen}
+
+
+% presentación de título y capítulo
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+% número y título de sección
+\renewcommand{\sectionmark}[1]{\markright{\thesection~~ #1}}
+
+
+
+
+\lhead[\fancyplain{}{\small \thepage}]{\fancyplain{}{\scshape
+\scriptsize \rightmark}} %\rightmark = información sobre el capítulo
+
+\rhead[\fancyplain{}{\scshape \scriptsize
+\leftmark}]{\fancyplain{}{\small \thepage}} %\leftmark = información sobre la sección
+
+\lfoot[\fancyplain{}{\Escuela}]{\fancyplain{}{}}
+\cfoot[\fancyplain{\tstamp}{}]{\fancyplain{\tstamp}{\TEMA}}
+\rfoot[\fancyplain{}{\Uni}]{\fancyplain{}{}}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{\headrulewidth}
+
+% cambiar el formato para los títulos
+\newcommand{\bigrule}{\titlerule[0.5mm]}
+
+\titleformat{\chapter}[display]
+{\bfseries \Huge } {
+ \titlerule
+ \filleft\Large\chaptertitlename
+ }
+{0mm} {\filleft}
+ [\vspace{0.5mm}\bigrule]
+
+
+% incluimos los .tex de cada uno de las secciones previas al verdadero documento (recuerda: sólo debe ir el nombre del .tex)
+% los puntos .tex van sin preámbulo, es decir que sólo va el texto correspondiente y las instrucciones para definir título, secciones, subsecciones, tablas, etc.
+\include{agradecimiento}
+\include{dedicatoria}
+\include{resumen}
+
+% por si quieres incuir hasta un tercer nivel en la tabal de contenidos
+%\setcounter{tocdepth}{3}
+
+% creamos la tabla de contenidos y las listas de figuras y tablas
+\tableofcontents
+\listoffigures 
+\listoftables
+
+\mainmatter
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.~~#1}{}}
+
+%########################################################################################
+% ahora si incluimos cada uno  de los .tex correspondientes a los capítulos de la tesis. Es más claro dividir los capítulos en .tex aunque puedes poner tooodo el texto aquí.
+% los puntos .tex van sin preámbulo, es decir que sólo va el texto correspondiente y las instrucciones para definir título, secciones, subsecciones, tablas, etc.
+\include{01-Introduccion}
+\include{02-Marco}
+\include{03-Trabajo}
+\include{04-Metodo}
+\include{05-Experimentos}
+\include{06-Conclusiones}
+
+% si es necesario incluir apéndices aquí se colocan los respectivos .tex
+%\appendix
+%\clearpage
+\addappheadtotoc
+%\appendixpage
+
+%\include{TablasExperimentos}
+%\include{ArticulosPublicados}
+
+% si se quieres incluir un archivo pdf (por ejemplo los artículos publicados) descomenta y si es necesario reutiliza esta isntrucción
+%\includepdf[pages=-]{relatedwork}
+
+\backmatter
+
+% se incluye la bibliografía en su respectivo .bib y con el estilo deseado
+\bibliographystyle{aaaiesp}
+\bibliography{Bibliografia}
+
+% y por fin: FIN
+\end{document}

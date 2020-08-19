@@ -1,0 +1,62 @@
+
+\section{Aumento de datos}
+
+El aprendizaje profundo típicamente requiere grandes cantidades de datos etiquetados para tener éxito. El aumento de datos promete resolver el problema de la necesidad de más datos etiquetados, básicamente consiste en aplicar una serie de transformaciones a un ejemplo original para obtener un nuevo dato a partir de éste.
+
+El término \textbf{aumento de datos} se refiere a métodos para construir una optimización iterativa o algoritmos de muestreo mediante la introducción de datos no observados o variables latentes \cite{van2001art}. La idea del aumento de datos nació en problemas de \textbf{datos incompletos}, como una forma de completar las celdas faltantes en una tabla de contingencia balanceada \cite{dempster1977maximum}. El aumento de datos automático es mayoritariamente utilizado en tareas relacionadas a visión computacional y ayudan a realizar un entrenamiento más robusto particularmente cuando el tamaño de los datos es pequeño. 
+
+%Las técnica de aumento de datos se pueden agrupar en dos grupos: el aumento de datos supervisado y el aumento de datos semi-supervisado.
+
+Las técnicas de aumento de datos se pueden clasificar en dos categorías: aquellas que se basan en aprendizaje supervisado y las que utilizan un enfoque semi-supervisado.
+
+\subsection{Aumento de datos supervisado} El objetivo es crear un nuevo y realista conjunto de entrenamiento aplicando una transformación a la entrada de un ejemplo. Conservando la etiqueta original del ejemplo. Formalmente, sea $q(\hat{x}|x)$ la transformación de aumento de la cual podemos extraer  ejemplos aumentados $\hat{x}$ basado en un ejemplo original $x$. Para que una transformación de aumento sea valida es requerido que cualquier ejemplo $\hat{x} \sim q((\hat{x}|x))$ extraído de la distribución comparta la misma etiqueta de verdad que $x$, es decir $y(\hat{x})=y(x)$. Dada una transformación de aumento válida, simplemente se pude minimizar la probabilidad negativa de los ejemplos aumentados \cite{xie2019unsupervised}.
+
+El aumento de datos supervisado puede ser equivalentemente visto como construir un conjunto aumentado etiquetado del conjunto original supervisado y entrenar el modelo en el conjunto aumentado. El punto crítico es como diseñar esa transformación, en la literatura podemos encontrar dos grupos de algoritmos para crear ejemplos de entrenamiento adicionales: los que operan \textbf{a nivel datos}, los cuales crean transformaciones en el espacio de datos \cite{zhong2017random}, y \textbf{sobre muestreo sintético} creando ejemplos adicionales a nivel características es decir en un espacio vectorial \cite{chawla2002smote}. 
+
+\subsection{Aumento de datos semi-supervisado}
+%Una linea reciente de trabajo en aprendizaje semi-supervisado ha estado utilizando ejemplos sin etiquetar para forzar 
+La forma general de estos trabajos puede ser resumida como sigue:
+
+\begin{itemize}
+    \item Dada una entrada $x$, se calcula la distribución $p_\theta (y|x)$ dado $x$ y una versión con ruido $p_\theta (y|x, \epsilon)$ mediante la introducción de un pequeño ruido $\epsilon$. El ruido puede ser aplicado a $x$ o estados ocultos.
+    \item Minimizar una métrica de divergencia entre las dos distribuciones $D (p_\theta (y|x) || p_\theta (y|x, \epsilon))$.
+\end{itemize}
+
+Este procedimiento forza el modelo a ser insensible al ruido $\epsilon$ y suave con respecto a los cambios en el espacio de entrada. Desde otra perspectiva, minimizando la pérdida de consistencia gradualmente se propaga la información de la etiqueta de ejemplos etiquetados a ejemplos no etiquetados \cite{Miyato2019}.
+
+
+\subsection{Aumento de datos en clasificación de textos}
+
+El aumento de datos ha sido ampliamente utilizado en tareas de visión computacional \cite{cubuk2019autoaugment}, pero menos en tareas de procesamiento de lenguaje natural, en años recientes ha crecido el interés por proponer diversas técnicas para el aumento de datos en la clasificación de textos.
+
+\subsubsection{Basados en métodos semi-supervisados}
+%Dentro del aumento de datos semi-supervisado podemos incluir los siguientes trabajos: 
+
+\cite{hedderich2018training} propusieron una capa de ruido que es agregada a una arquitectura de red neuronal. Lo que permite modelar el ruido y entrenar una combinación de datos limpios y con ruido, comprobando que en un contexto de bajos recursos reduciendo el conjunto original hasta un 1\%, en la tarea de reconocimiento de entidades nombradas (NER), la clasificación puede mejorar en términos de \textit{F1} en promedio hasta 10\% mediante el uso adicional de datos con ruido y manejando el ruido. Variando el tamaño del conjunto original a un 10\% la ganancia obtenida no se observa. 
+
+Reinforced Co-Training \cite{wu2018reinforced}, este método utiliza el algoritmo Q-learning para aprender una política de selección de datos y entonces explotar esta política para co-entrenar clasificadores automáticamente. En la clasificación de tareas genéricas de texto lograron reducir el error en una red CNN de 28.32\% a 16.64\% en el conjunto de datos AG's News y  de 9.53\% a 2.45\% para el conjunto DBpedia. Aun así no lograron superar la línea base la cual consistió en entrenar la red con el conjunto datos completo obteniendo un error de 8.69\% y 0.91\% para los Ag's News y DBpedia. Indicando que aún existe una brecha entre los algoritmos semi-supervisados y los supervisados.
+
+UDA \cite{xie2019unsupervised}: Sustituyendo operaciones que agregan ruido simple por métodos avanzados de aumento de datos, traducción inversa y reemplazo de sinónimos, demostró mejoras en tareas de clasificación de opiniones. Realizando experimentos a gran escala y con algoritmos del estado del arte para clasificación de oraciones, BERT principalmente, lograron obtener en el conjunto de datos IMDb para clasificación de sentimientos, con tan solo 20 ejemplos etiquetados, una tasa de error de 4.20\% superando el estado del arte entrenado con 25,000 ejemplos. 
+
+\cite{han2019neural} propusieron una técnica de aumento de datos para la detección de rumores, la idea clave es explotar datos no etiquetados de eventos en redes sociales para aumentar tweets etiquetados como rumor. Expandiendo el conjunto de datos cerca de 200\% y utilizando algoritmos de aprendizaje profundo del estado del arte para detectar rumores, demostraron que el aumento de datos puede reducir el sobre ajuste y el desbalanceo causado por datos de entrenamiento limitado. Con el aumento de datos la puntuación \textit{F1} pudo ser mejorada por un 12.1\%, para la detección de rumores.
+
+%Algunos trabajos relevantes basados en aprendizaje supervisado son:
+\subsubsection{Basados en aprendizaje supervisado}
+
+\cite{zhang2015character} presentaron una exploración empírica de redes convolucionales a nivel caracter. Construyeron conjuntos de datos aumentados para la clasificación de opiniones, mediante el reemplazo de palabras por sus sinónimos utilizando un tesaurus. Llegando a reducir el error de clasificación en 1\% menos, agregando aumento de datos en cuatro de ocho conjuntos de datos.
+
+Aumento de datos contextual \cite{kobayashi2018contextual}: Asumen que la invariancia de las oraciones es natural incluso si las palabras en las oraciones son reemplazadas por otras palabras con relaciones paradigmáticas. Este método estocásticamente reemplaza palabras con otras palabras que son predichas por un modelo de lenguaje bi-direccional. Además proponen un modelo de lenguaje condicionado a la etiqueta que permite al modelo aumentar oraciones sin romper la compatibilidad de la etiqueta. Mediante experimentos en 6 conjuntos de datos de clasificación de textos logran mejorar en promedio un 1\% en exactitud.
+
+EDA \cite{wei2019eda}: se presenta como una alternativa simple y escalable en comparación con métodos de aumentos de datos basados en redes neuronales, EDA consiste de una combinación de cuatro operaciones a nivel palabra: reemplazo de sinónimos, inserción aleatoria, intercambio aleatorio y eliminación aleatoria. En cinco tareas de clasificación, muestran que es posible mejorar  el rendimiento en redes convolucionales y recurrentes, alcanzado entre un 1 y 2\% en comparación de modelos sin aumento de datos.
+
+Paráfrasis neuronal \cite{kumar2019submodular}: Este trabajo propone un método para obtener paráfrasis altamente diversas cuidando de mantener la calidad, para esto utilizan un modelo neuronal Seq2Seq buscando maximizar una función monótona submódular en lugar de una búsqueda de haz. Los autores evaluaron su propuesta para la clasificación de intención utilizando una red LSTM y regresión logística, obteniendo una mejora de 3\% en exactitud sobre el método base que es no realizar aumento de datos y 2\% sobre reemplazo de sinónimos.
+%Agregar cita se2seq
+
+%%Subir de nivel
+\subsection{Discusión del trabajo relacionado}
+
+Todos los trabajos hasta ahora encontrados en la literatura, están enfocados a la clasificación de textos cortos o clasificación temática,  pero ni una enfocada a tareas de perfilado de autor. En el caso de perfilado de autor, es necesario que los nuevos ejemplos aumentados respeten el estilo del autor, por lo que en este trabajo se proponen métodos de aumento de datos que consideren el estilo y contenido del documento original; considerando estilo como la forma o modo de expresar el contenido, siendo el contenido el tema o mensaje a transmitir.
+
+Los resultados hasta ahora alcanzados muestran un beneficio del uso del aumento de datos, no obstante, estos beneficios aún modesto. Por otro lado, las técnicas simples de aumento de datos a nivel palabra han demostrado ser efectivas y escalables, y obtienen resultados comparables a técnicas complejas como  la paráfrasis neuronal o modelos de lenguaje.
+
+%existen trabajos con formas creativas para realizar el aumento de datos \cite{chen2019improving,zhang2019integrating,coulombe2018text,miao2020snippext}. 

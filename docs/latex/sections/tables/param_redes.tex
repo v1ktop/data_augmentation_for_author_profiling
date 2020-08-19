@@ -1,0 +1,19 @@
+
+\begin{table}[t]
+\caption{Parámetros utilizados para el entrenamiento de los modelos basados en redes neuronales.} \label{table:param_redes}
+\begin{center}
+
+\begin{tabular}{lc}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\textbf{Parámetro}      & \textbf{Valor}           \\ \hline
+Tasa de aprendizaje     & 1.00E-03                 \\ \hline
+Tamaño del Batch        & 1024                     \\ \hline
+Función de perdida      & Entropia cruzada binaria \\ \hline
+Maximo número de epocas & 20                       \\ \hline
+Epocas de tolerancia    & CNN=6; Bi-LSTM=3     %Criterio de paro    \\ \hline
+Pruebas independientes  & 3                        \\ \hline
+\end{tabular}
+
+\end{center}
+\end{table}

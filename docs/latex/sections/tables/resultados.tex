@@ -1,0 +1,31 @@
+
+\begin{table}[h]
+\caption{Resultados promedio en términos de la métrica F1.} \label{table:resultados}
+
+\begin{center}
+
+\resizebox{\columnwidth}{!}{%
+
+\begin{tabular}{llrrrrrrr}
+\hline
+\multicolumn{2}{l}{\textbf{Conjunto de datos}}               & \multicolumn{1}{l}{\textbf{Bi-LSTM}} & \multicolumn{1}{l}{\textbf{}}    & \multicolumn{1}{l}{\textbf{CNN}} & \multicolumn{1}{l}{\textbf{}}    & \multicolumn{1}{l}{\textbf{SVM}} & \multicolumn{1}{l}{\textbf{SVM-C}}    & \multicolumn{1}{l}{\textbf{Promedio}} \\ \hline
+                   & \textit{Metodo}                         & \multicolumn{1}{l}{\textit{F1}}      & \multicolumn{1}{l}{\textit{std}} & \multicolumn{1}{l}{\textit{F1}}  & \multicolumn{1}{l}{\textit{std}} & \multicolumn{1}{l}{\textit{F1}}  & \multicolumn{1}{l}{\textit{F1}}       & \multicolumn{1}{l}{\textit{F1}}       \\ \hline
+\textit{Depresión} & \cellcolor[HTML]{C0C0C0}Sin aumento     & \cellcolor[HTML]{C0C0C0}0.50         & \cellcolor[HTML]{C0C0C0}0.02     & \cellcolor[HTML]{C0C0C0}0.47     & \cellcolor[HTML]{C0C0C0}0.06     & \cellcolor[HTML]{C0C0C0}0.16     & \cellcolor[HTML]{C0C0C0}0.50          & \cellcolor[HTML]{C0C0C0}0.41          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Over            & \cellcolor[HTML]{EFEFEF}0.54         & \cellcolor[HTML]{EFEFEF}0.04     & \cellcolor[HTML]{EFEFEF}0.51     & \cellcolor[HTML]{EFEFEF}0.02     & \cellcolor[HTML]{EFEFEF}0.51     & \cellcolor[HTML]{EFEFEF}0.51          & \cellcolor[HTML]{EFEFEF}0.52          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Tesauro         & \cellcolor[HTML]{EFEFEF}0.54         & \cellcolor[HTML]{EFEFEF}0.01     & \cellcolor[HTML]{EFEFEF}0.50     & \cellcolor[HTML]{EFEFEF}0.02     & \cellcolor[HTML]{EFEFEF}0.50     & \cellcolor[HTML]{EFEFEF}0.48          & \cellcolor[HTML]{EFEFEF}0.51          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Sin restriccion & \cellcolor[HTML]{EFEFEF}0.53         & \cellcolor[HTML]{EFEFEF}0.03     & \cellcolor[HTML]{EFEFEF}0.52     & \cellcolor[HTML]{EFEFEF}0.00     & \cellcolor[HTML]{EFEFEF}0.53     & \cellcolor[HTML]{EFEFEF}0.50          & \cellcolor[HTML]{EFEFEF}0.52          \\ \hline
+                   & Restrición Chi2                         & \textbf{0.56}                        & 0.01                             & 0.52                             & 0.01                             & \textbf{0.53}                    & 0.50                                  & \textbf{0.53}                         \\ \hline
+                   & Relacion Equivalente                       & 0.54                                 & 0.03                             & \textbf{0.52}                    & 0.02                             & 0.51                             & 0.49                                  & 0.51                                  \\ \hline
+                   & Relacion Contraria                      & 0.51                                 & 0.01                             & 0.52                             & 0.01                             & 0.52                             & \textbf{0.51}                         & 0.51                                  \\ \hline
+\textit{Anorexia}  & \cellcolor[HTML]{C0C0C0}Sin aumento     & \cellcolor[HTML]{C0C0C0}0.79         & \cellcolor[HTML]{C0C0C0}0.01     & \cellcolor[HTML]{C0C0C0}0.77     & \cellcolor[HTML]{C0C0C0}0.01     & \cellcolor[HTML]{C0C0C0}0.67     & \cellcolor[HTML]{C0C0C0}0.72          & \cellcolor[HTML]{C0C0C0}0.74          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Over            & \cellcolor[HTML]{EFEFEF}0.80         & \cellcolor[HTML]{EFEFEF}0.02     & \cellcolor[HTML]{EFEFEF}0.80     & \cellcolor[HTML]{EFEFEF}0.02     & \cellcolor[HTML]{EFEFEF}0.77     & \cellcolor[HTML]{EFEFEF}0.75          & \cellcolor[HTML]{EFEFEF}0.78          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Tesauro         & \cellcolor[HTML]{EFEFEF}0.81         & \cellcolor[HTML]{EFEFEF}0.01     & \cellcolor[HTML]{EFEFEF}0.80     & \cellcolor[HTML]{EFEFEF}0.01     & \cellcolor[HTML]{EFEFEF}0.76     & \cellcolor[HTML]{EFEFEF}0.75          & \cellcolor[HTML]{EFEFEF}0.78          \\ \hline
+                   & \cellcolor[HTML]{EFEFEF}Sin restriccion & \cellcolor[HTML]{EFEFEF}0.81         & \cellcolor[HTML]{EFEFEF}0.01     & \cellcolor[HTML]{EFEFEF}0.80     & \cellcolor[HTML]{EFEFEF}0.00     & \cellcolor[HTML]{EFEFEF}0.78     & \cellcolor[HTML]{EFEFEF}\textbf{0.78} & \cellcolor[HTML]{EFEFEF}0.79          \\ \hline
+                   & Restrición Chi2                         & 0.80                                 & 0.00                             & \textbf{0.80}                    & 0.02                             & 0.78                             & 0.77                                  & 0.79                                  \\ \hline
+                   & Relacion Equivalente                       & 0.80                                 & 0.02                             & 0.79                             & 0.01                             & 0.78                             & 0.76                                  & 0.78                                  \\ \hline
+                   & Relacion Contraria                      & \textbf{0.83}                        & 0.03                             & 0.79                             & 0.02                             & \textbf{0.81}                    & 0.75                                  & \textbf{0.80}                         \\ \hline
+\end{tabular}
+
+}
+\end{center}
+\end{table}
