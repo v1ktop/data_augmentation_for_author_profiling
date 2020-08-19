@@ -9,9 +9,12 @@ Created on Sat Jun 15 16:09:47 2019
 
 This script test the model with: training - test, partitions
 
+SIGUE CNN
+
 """
 
 import numpy as np
+import tensorflow as tf
 import warnings
 from datetime import datetime
 from word_level_da import utils
@@ -27,24 +30,25 @@ warnings.filterwarnings("ignore")
 OBJ_DIR = "D:/weights_rnn/trainedfixed/"
 VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
 FAST300 = "D:/Models/fasttex/cc.en.300.bin"
+tf.get_logger().setLevel('INFO')
 
 if __name__ == "__main__":
 
-    key = "depresion18_local"
+    key = "depresion19_local"
     glove_file = FAST300
     batch_size = 1024
     epochs = 20
     layers = 1
-    nodes = 256
+    nodes = 300
     dim = 300
     label_pos = 1
     len_doc = 64
     kernel = 1
     max_features = 150000
-    patience = 3
+    patience = 6
     drop = 0.2
     lr = 1e-3
-    model = "rnn-fixed"
+    model = "cnn"
     AUGMENTED = True
 
     logger = utils.configure_root_logger(prefix_name=key + "_")
@@ -75,9 +79,9 @@ if __name__ == "__main__":
     bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=False,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
-    methods = ["Over"]
-    n_docs = [i for i in range(8,11)]
-    umbral = 0.5
+    methods = ["Rel_0"]
+    n_docs = [i for i in range(1,11)]
+    umbral = 0.4
     q = 75
     score_method = "avg"
     for augmentation_method in methods:
@@ -103,7 +107,7 @@ if __name__ == "__main__":
                                      vocab_dir=VOCAB_DIR, key=key.split("_")[0])
 
             info[2] = umbral
-            for i in range(1,3):
+            for i in range(3):
                 score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False,
                                            weights_name=key.split("_")[0] + prefix + model + str(i) + ".h5",
                                            ad_data=(test[3]),
