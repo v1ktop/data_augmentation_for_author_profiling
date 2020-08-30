@@ -31,11 +31,11 @@ if __name__ == "__main__":
     logger.info("IDF, %s", idf)
     logger.info("Augmentation method  %s", methods[0])
 
-    data = Dataset(key=key, doc_len=len_doc, min_len=int(len_doc / 2), chunking=False, remove_end=True)
+    data = Dataset(key=key, doc_len=len_doc, min_len=int(len_doc / 2), chunking=True, remove_end=True)
     training, test = data.get_train_test(return_ids=True)
 
     umbral = 0.5
-    n_docs = [i for i in range(2, 11)]
+    n_docs = [i for i in range(1, 11)]
 
     for augmentation_method in methods:
         for n in n_docs:
