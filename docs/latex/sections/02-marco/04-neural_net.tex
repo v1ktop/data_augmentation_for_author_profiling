@@ -49,7 +49,7 @@ Las ventajas\footnote{Listadas en https://scikit-learn.org/stable/modules/svm.ht
 Las desventajas incluyen:
 \begin{itemize}
     \item Si el número de características es mucho mayor al número de ejemplos, elegir una función de núcleo y término de regularización es crucial para evitar el sobre ajuste.
-    \item Las SVMs no otorgan directamente estimaciones de probabilidad, éstas son calculadas utilizando validación cruzada.
+    \item Las SVMs no otorgan directamente estimaciones de probabilidad, estas son calculadas utilizando validación cruzada.
     
 \end{itemize}
     
@@ -59,15 +59,15 @@ Las desventajas incluyen:
 
 \subsection{Redes neuronales profundas}
 
-En la definición de \citep{lecun2015deep}, el aprendizaje profundo permite a los modelos computaciones que están compuestos de múltiples capas de procesamiento aprender representaciones de los datos con múltiples niveles de abstracción. Estos métodos han mejorado dramáticamente el estado del arte en el varias tareas en el entendimiento de lenguaje natural, particularmente, clasificación de textos, análisis de sentimientos, respuesta a preguntas y traducción automática. El aprendizaje profundo descubre estructuras en grandes conjuntos de datos utilizando el algoritmo de retro-propagación para determinar sus parámetros internos que son utilizados para calcular la representación en cada capa de la arquitectura.
+En la definición de \citep{lecun2015deep}, el aprendizaje profundo permite a los modelos computacionales que están compuestos de múltiples capas de procesamiento aprender representaciones de los datos con múltiples niveles de abstracción. Estos métodos han mejorado dramáticamente el estado del arte en el varias tareas en el entendimiento de lenguaje natural, particularmente, la clasificación de textos, el  análisis de sentimientos, dar respuesta a preguntas y traducción automática. El aprendizaje profundo descubre estructuras en grandes conjuntos de datos utilizando el algoritmo de retro-propagación para determinar sus parámetros internos que son utilizados para calcular la representación en cada capa de la arquitectura.
 
-A continuación se describen los conceptos principales en aprendizaje profundo tomados principalmente de \citep{lecun2015deep}, para una definición mas extensa consultar \citep{kamath2019deep, goodfellow2016deep}.
+A continuación se describen los conceptos principales en aprendizaje profundo tomados principalmente de \citep{lecun2015deep}, para una definición más extensa consultar \citep{goodfellow2016deep, kamath2019deep}.
 
 \subsubsection{Retropropagación y entrenamiento de arquitecturas multicapa}
 
-Una arquitectura multicapa es una pila de modelos simples y muchos de éstos calculan un mapeo entrada-salida no lineal. El procedimiento de retro-propagación que calcula el gradiente de una función objetivo con respecto a los pesos de múltiples capas es una aplicación práctica de la regla de la cadena para derivadas.
+Una arquitectura multicapa es una pila de modelos simples y muchos de estos calculan un mapeo entrada-salida no lineal. El procedimiento de retro-propagación que calcula el gradiente de una función objetivo con respecto a los pesos de múltiples capas es una aplicación práctica de la regla de la cadena para derivadas.
 
-Las arquitecturas multicapa aprenden a mapear una entrada de tamaño fijo (por ejemplo, la representación vectorial de un documento) a una salida de tamaño fijo (por ejemplo, las categorías de documentos). Para ir de una capa a la siguiente, un conjunto de unidades (nodos o neuronas) calculan una suma pesada de las entradas de la capa anterior y el resultado es pasado a través de una función no lineal. A la fecha, la función ReLU (\ref{eq:RELU})  es una de las más populares ya que se ha demostrado empíricamente que permite aprender más rápido en redes neuronales con muchas capas \citep{glorot2011deep}. Las neuronas que no forman parte de la capa de entrada ni la de salida se conocen como unidades ocultas. 
+Las arquitecturas multicapa aprenden a mapear una entrada de tamaño fijo (por ejemplo, la representación vectorial de un documento) a una salida de tamaño fijo (por ejemplo, las categorías de documentos). Para ir de una capa a la siguiente, un conjunto de unidades (nodos o neuronas) calculan una suma pesada de las entradas de la capa anterior y el resultado pasado es a través de una función no lineal. A la fecha, la función ReLU (\ref{eq:RELU})  es una de las más populares ya que se ha demostrado empíricamente que permite aprender más rápido en redes neuronales con muchas capas \citep{glorot2011deep}. Las neuronas que no forman parte de la capa de entrada ni la de salida se conocen como unidades ocultas. 
 
 Las\textbf{ capas ocultas} pueden ser vistas como una distorsión de la entrada en una forma no lineal para que las categorías sean linealmente separables por la última capa.
 
@@ -83,23 +83,13 @@ d_{j} = (w_{1,j},w_{2,j},...,w_{i,j}...,w_{l_{j},j})
 
 En donde $l_{j}$ es el tamaño del documento $j$, y $w_{i,j}$ es la representación vectorial de la palabra $i$ en el documento $j$.
 
-En la \textbf{capa de salida} el numero de neuronas es igual al número de clases para clasificaciones con más de dos clases y una para clasificación binaria, es la encargada de realizar la predicción final en base a las representaciones capturadas por la red neuronal.
+En la \textbf{capa de salida} el número de neuronas es igual al número de clases para clasificaciones con más de dos clases y una para clasificación binaria, es la encargada de realizar la predicción final en base a las representaciones capturadas por la red neuronal.
 
-La \textbf{inicialización} de los pesos y sesgo (bias) por lo general es con ceros o números generados con base en algún criterio, un algoritmo común de idealización es el conocido como inicialización Glorot o Xavier \citep{glorot2010understanding}, el cual es basado en números aleatorios extraídos de una distribución de probabilidad uniforme.
+La \textbf{inicialización} de los pesos y sesgo (bias) por lo general es con ceros o números generados con base en algún criterio, un algoritmo común es el conocido como inicialización Glorot o Xavier \citep{glorot2010understanding}, el cual es basado en números aleatorios extraídos de una distribución de probabilidad uniforme.
 
 Cuando se entrena una red neuronal, la propagación hacia adelante es realizada en lotes o \textbf{batch} (un número de instancias de entrenamiento determinado por el hiper-parámetro llamado tamaño de batch), después se calcula el error para cada neurona mediante retro-propagación en el mismo lote. 
 
 Una \textbf{época} es una sola iteración sobre todo el conjunto de datos, el número de épocas es un hiper-parámetro que determina cuantas veces el algoritmo de aprendizaje itera sobre todo el conjunto de entrenamiento.
-
-%\subsubsection{Regularización}
-%L1 , L2, Batch, Augment , Drotout
-
-%\subsubsection{Optimización}
-% Adam, cross-entropy, loss 
-
-%Durante la fase de entrenamiento 
-
-%%Agregar algunas imagenes chidas del paper de Lecun 2015
 
 
 \subsubsection{Redes Neuronales Recurrentes (RNN)}
@@ -116,7 +106,7 @@ La redes recurrentes procesan una secuencia $u_t$ como entrada, un elemento a la
 Las redes recurrentes son sistemas dinámicos muy poderosos, pero su entrenamiento es muy problemático dado que su gradiente al ser retro-propagado crece o disminuye en cada paso, así que sobre cada paso típicamente explotan o desaparecen \citep{lecun2015deep}, para tratar de solucionar este problema se propuso un tipo especial de red recurrente conocida como LSTM.
 
 \subsubsection{LSTM}
-Propuestas originalmente por \citep{hochreiter1997long} para tratar los problemas de explotación y desvanecimiento de gradientes en redes recurrentes, las redes de memoria a corto y largo plazo son un tipo especial de red recurrente que conserva las dependencias largas de maneras más efectivas en comparación con una red recurrente básica. Las redes LSTM usan múltiples capas para regular el monto de información que será permitida en cada estado de nodo. La figura \ref{fig:LSTM} muestra la estructura interna de una celda de una LSTM. En donde $x_t$, $o$ y $h_t$ representan la entrada, salida y el estado oculto en tiempo $t$. $c_{t-1}$ es la información llevada del estado $t-1$ al estado $t$, el cual será combinado con la entrada $x_t$ y el estado oculto $h_{t-1}$ para formar el estado oculto $h_t$ y el arrastre de $c_t$ el cual será enviado al siguiente paso.
+Propuestas originalmente por \citep{hochreiter1997long} para tratar los problemas de explotación y desvanecimiento de gradientes en redes recurrentes, las redes de memoria a corto y largo plazo (LSTM por sus siglas en inglés, Long Short Term Memory) son un tipo especial de red recurrente que conserva las dependencias largas de maneras más efectivas en comparación con una red recurrente básica. Las redes LSTM usan múltiples capas para regular el monto de información que será permitida en cada estado de nodo. La figura \ref{fig:LSTM} muestra la estructura interna de una celda de una LSTM. En donde $x_t$, $o$ y $h_t$ representan la entrada, salida y el estado oculto en tiempo $t$. $c_{t-1}$ es la información llevada del estado $t-1$ al estado $t$, el cual será combinado con la entrada $x_t$ y el estado oculto $h_{t-1}$ para formar el estado oculto $h_t$ y el arrastre de $c_t$ el cual será enviado al siguiente paso.
 
 \subsubsection{Redes recurrentes bi-direccionales}
 Las redes recurrentes convencionales consideran una estructura causal, significando que cada estado en tiempo $t$ captura solo información del pasado, $x,..., x^{t-1}$, y la entrada actual $x^t$. Sin embargo en muchas aplicaciones para realizar una predicción de $y^t$ que dependa de la secuencia entera, las RNNs bidireccionales fueron propuestas para resolver ese problema  \citep{schuster1997bidirectional}. Las RNNs bidireccionales combinan una red recurrente que se mueve hace adelante en el tiempo, comenzando desde el inicio del texto, con otra que se mueve hacia adelante en el tiempo, comenzando desde el fin del texto, para obtener una representación final se combina la red hacia adelante y hacia atrás mediante alguna operación con tensores (suma, concatenación, multiplicación o promedio). 
@@ -126,13 +116,12 @@ Las redes recurrentes convencionales consideran una estructura causal, significa
 \begin{figure}[!t]
 \centering
 \includegraphics[width=0.7 \textwidth]{sections/figures/LSTM_cell2.png}
-\caption{Una celda de LSTM desdoblada sobre el tiempo.} \label{fig:LSTM}
+\caption{Una celda de LSTM desdoblada sobre el tiempo. Obtenida de Wikimedia Commons y modificada bajo la licencia Creative Commons 4.0} \label{fig:LSTM}
 \end{figure}
 
 
 \subsubsection{Redes Neuronales Convolucionales (CNN)}
 Aunque originalmente fueron diseñadas para reconocimiento de caracteres en imágenes, las redes convolucionales han sido empleadas efectivamente para clasificación de textos \citep{kim2014convolutional, zhang2015character, zhang2015sensitivity, conneau2016very}.
-En el contexto de clasificación de textos el principal objetivo de este tipo de redes es capturar un contexto local de las palabras en el documento, mediante la aplicación de un conjunto de núcleos de tamaño $d$x$d$. Estas capas de convolución son llamadas mapas de características y pueden ser apiladas para proporcionar múltiples filtros de la entrada. Para reducir la complejidad computacional, las CNNs utilizan una operación llamada pooling la cual reduce el tamaño de la salida de una capa a la siguiente en la red. Existen diferentes técnicas de pooling para reducir la salida y conservar características importantes. El pooling más empleado es el método de max pooling, el cual selecciona el elemento máximo en la ventana de pooling. Para pasar la salida de las capas de pooling, los mapas son \textit{aplanados} en una columna. La capa final en una CNN es típicamente una capa totalmente conectada.
+En el contexto de clasificación de textos el principal objetivo de este tipo de redes es capturar un contexto local de las palabras en el documento, mediante la aplicación de un conjunto de filtros de tamaño $h$x$d$. Si denotamos la dimensión de los vectores de palabras por $d$ y el tamaño de la secuencia de entrada como $s$, entonces la dimensión de la matriz de la secuencia es $s x d$, entonces se puede tratar la matriz de la secuencia como una imagen y realizar convoluciones sobre esta vía filtros. Es razonable utilizar filtros con un ancho igual al la dimensión de los vectores de palabras (i.e., $d$). Así que solo varia la altura del filtro, i.e., el número de filas adyacentes identificado como \textbf{tamaño de filtro} o tamaño de núcleo \cite{zhang2015sensitivity}. 
 
-
-%\subsection{Limitaciones del aprendizaje profundo}
+Los filtros forman capas de convolución, estas capas de convolución son llamadas mapas de características y pueden ser apiladas para proporcionar múltiples filtros de la entrada. Para reducir la complejidad computacional, las CNNs utilizan una operación llamada \textbf{pooling} la cual reduce el tamaño de la salida de una capa a la siguiente en la red. Existen diferentes técnicas de pooling para reducir la salida y conservar características importantes. El pooling más empleado es el método de \textbf{max pooling}, el cual selecciona el elemento máximo en la ventana de pooling. Para pasar la salida de las capas de pooling, los mapas son \textit{aplanados} en una columna. La capa final en una CNN es típicamente una capa totalmente conectada \cite{kowsari2019text}.

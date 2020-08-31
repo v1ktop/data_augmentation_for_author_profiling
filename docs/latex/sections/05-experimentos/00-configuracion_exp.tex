@@ -1,0 +1,164 @@
+
+\section{Configuración experimental}
+
+
+La configuración experimental sigue  un enfoque supervisado. En la cual se cuenta con un conjunto de historiales de usuario, los cuales pueden verse como un sólo documento, a este documento $X$ le corresponde su etiqueta correspondiente $y \in Y$  en una relación uno a uno. En todos los conjuntos de datos usados se trata únicamente de dos clases, es decir, se trata de una clasificación binaria ($|Y| = 2$). 
+
+La metodología empleada está compuesta de 4 fases:  preprocesamiento, aumento de datos, entrenamiento y evaluación. En el preprocesamiento se realizan las modificaciones necesarias para normalizar los documentos, además de segmentarlos y filtrarlos (tal como se explica en párrafos posteriores); posteriormente se pasa a la etapa de aumento de datos. Una vez con que se han aumentado los datos de entrenamiento se construye un modelo de clasificación, a través de un algoritmo de aprendizaje máquina (en específico es de nuestro interés los métodos de redes profundas). Finalmente, se evalúa el modelo de clasificación sobre un conjunto de datos que no ha sido aumentado ni utilizado en la búsqueda de parámetros durante el entrenamiento, únicamente es preprocesado de la misma forma que los datos de entrenamiento. La figura \ref{fig:metodologia} muestra las diferentes fases descritas.
+
+\input{sections/figures/digrama_general}
+
+\subsection{Conjunto de datos}
+
+\textbf{Depresión 2018 y Anorexia}: Con el propósito de estudiar la detección temprana de depresión y anorexia, los autores \citep{Losada2018} recopilaron publicaciones de diversos usuarios de la red social Reddit. Para cada usuario la colección contiene una secuencia de publicaciones en orden cronológico. Este conjunto de datos se caracteriza por tener una gran cantidad de texto pero con muy pocos usuarios, como se puede observar en la figura \ref{fig:erisk_freq}. Hay dos categorías para cada usuario en cada tarea. El número de usuarios total en cada conjunto se presenta en la tabla \ref{table:original_users}. Dado que se trabaja con conjuntos de datos muy desbalanceados el aumento de datos solo se aplica sobre la clase de interés o clase positiva.
+
+\textbf{Depresión 2019}: Presentado en la tareas eRisk 2019 \cite{Losada2019}, a diferencia de la edición 2018 en esta ocasión el objetivo es predecir los niveles de depresión de un usuario (mínima, media, moderada, severa). Con el objetivo de que los resultados sean comparables en este trabajo se redujo el problema a una clasificación binaria como se trato con el conjunto del 2018; para esto los usuarios con depresión media a severa se tomaron como ejemplos de la clase positiva.
+
+Para el entrenamiento solo se consideraron 16 usuarios para la clase positiva como se muestra en la tabla \ref{table:original_users}, para obtener usuarios de la clase negativa se tomaron los etiquetados como negativos en el conjunto de entrenamiento del eRisk 2018. Finalmente el conjunto de test, solo se dividió en dos clases quedando 60 positivos y 10 negativos (deprimidos y no deprimidos respectivamente).
+\input{sections/tables/depresion_users_no_filter}
+
+\input{sections/tables/depresion_users_filter}
+
+\input{sections/figures/dist_data}
+
+
+\subsection{Pre-procesamiento}
+
+Dado que los documentos extraídos de redes sociales no siguen un lenguaje formal y además de texto existen direcciones de páginas web que los usuarios comparten, emoticonos y cáracteres especiales, entre otros; es necesario que antes del aumento de datos exista un preprocesamiento de los textos como una forma de reducir el ruido de los documentos originales.
+
+Los pasos del procesamiento seguido son los siguientes:
+
+ \begin{enumerate}
+     \item Normalización: Se identifican las páginas web en el texto y se reemplazan mediante la etiqueta http\_
+     \item Tokenización: Utilizando la herramienta NLTK se remueve de cada texto signos de puntuación y cáracteres especiales.
+     \item Segmentación: Los documentos originales son segmentados en pequeños fragmentos. Es decir, cada historial de usuario se fragmenta en secuencias de 64 palabras  (véase la siguiente sección). 
+     %\item Filtro: En la clasificación de documentos no todo el contenido del texto esencial para determinar la categoría a la cual pertenece, es decir existe cierta combinación de palabras que sirven para discriminar la clase. Para determinar estas palabras se emplea el método de selección de características denominado Chi-cuadrada.
+     \item Filtrado: Solo se conservan segmentos identificados como importantes para la clasificación (véase la siguiente sección).
+ \end{enumerate}
+
+
+
+\subsubsection{Segmentación y filtrado}
+Con el proposito de que el aumento de datos pueda ser proporcional independientemente de la longitud del documento original. Cada documento se dividió en segmentos de 64 palabras\footnote{Este parámetro se determinó de manera empírica.}. Posteriormente se filtró el conjunto de entrenamiento para conservar solo los segmentos importantes para realizar la clasificación. Es decir, se identificaron aquellos fragmentos con la mayor cantidad de palabras discriminantes. Para ello se identificaron las  palabras más discriminantes dentro del vocabulario del conjunto de entrenamiento mediante la técnica de selección de características $\chi^2$. Posteriormente se conservaron aquellos fragmentos  que contengan un determinado número de palabras con alta puntuación $\chi^2$. 
+
+Específicamente solo se seleccionaron términos estadísticamente significativos al nivel 0.001, equivalente a una puntuación $\chi^2 > $ 10.83 con un grado de libertad. En la tabla \ref{table:filter_users} se muestran los números de usuarios y secuencias obtenidas después de aplicar este filtro; para el conjunto de depresión el criterio de selección fue que la secuencia contuviera al menos 20 palabras de 1071 palabras con alta puntuación, y para el conjunto de anorexia 15 palabras de 1032. Como puede observarse en ambos casos se trata de umbrales altos. Esto se debe principalmente a que en las palabras con alta puntuación están presentes palabras vacías, palabras que tradicionalmente se eliminan para tareas de clasificación temática. No obstante, en nuestro caso,  se trata de una tarea donde el estilo es importante (p.e. uso de pronombres personales).
+
+
+
+\subsection{Configuración de los métodos propuestos}
+
+Para comprobar la efectividad del método propuesto se experimenta con  7 configuraciones diferentes: 2 líneas base, 2 métodos del estado del arte y 3 métodos propuestos. Además de esto se introduce un parámetro $n$ para observar el grado pertinente del aumento de datos, el cual indica el número de documentos nuevos aumentados, tomando valores enteros en el rango $[1,10]$.
+
+
+\subsubsection{Sin aumento de datos}
+Este método es la primera línea base y solo consideran los datos originales filtrados para el entrenamiento de los modelos (véase la tabla \ref{table:filter_users}).
+
+\subsubsection{Sobre muestreo}
+Esta línea base, consiste en incrementar el número de ejemplos de la clase minoritaria; este método no implica alguna pérdida de información ya que ningún elemento es modificado o descartado. Sin embargo la única desventaja es, que el modelo de aprendizaje generado tiende a sobre ajustarse, debido a que no agrega variabilidad en los datos.
+
+\subsubsection{Tesauro}
+Este método del estado del arte fue propuesto por \citep{zhang2015character} y demostró mejoras de un 1 a 2\% en exactitud para la clasificación de opiniones. También fue implementado por \citep{wei2019eda} con algunas modificaciones obteniendo una mejora entre un 1 y 2\% en comparación de no hacer aumento de datos, otros trabajos que utilizan este método como referencia y han encontrado evidencia de que agrega una ganancia en los resultados de clasificación son: \citep{jungiewicz2019towards}, \citep{kumar2019submodular}, \citep{park2019self}.
+
+Para decidir cuantas palabras reemplazar dada una secuencia de palabras, se utiliza el parámetro $p=$ 0.5 para calcular el valor de $r$ palabras a reemplazar, la selección de dichas palabras es aleatoria, el recurso externo para encontrar sinónimos es un tesauro (en este caso Wordnet\footnote{www.wordnet.princeton.edu/}), y finalmente en la fase de reemplazo, de las palabras candidatas, se selecciona el índice dado un número aleatorio $s$ generado de una distribución geométrica con parámetro $q=$ 0.5.
+
+El propósito de este método es ser muy conservativo en la modificación del texto original y el número $s$ controla la diversidad del vocabulario que por lo generaPara decidir que palabras reemplazarempleada).
+
+\subsubsection{Sustitución sin restricción y reemplazo mediante similitud coseno}
+Diversos estudios sugieren utilizar vectores de modelos pre-entrenados como Word2Vec, Glove, entre otros; la idea es recuperar palabras que se utilizan en contextos similares, en lugar de sinónimos. 
+
+Para decidir que palabras reemplazar se omiten palabras de paro y aquellas que no sean etiquetadas como sustantivos, adjetivos, verbos y adverbios; con el propósito de agregar mas variabilidad en los ejemplos el número $r$ es calculado con el parámetro $p=$ 0.2. En la fase de reemplazo las palabras más similares se seleccionan mediante similitud coseno, utilizándolas de mayor a menor en una selección sin reemplazo.
+
+El modelo de vectores pre-entrenados para representar las palabras de una secuencia fue Glove\footnote{https://nlp.stanford.edu/projects/glove/} con 300 dimensiones \citep{pennington2014glove}. Este modelo fue pre-entrenado con la base de datos Common Crawl, con 42 millones de  tokens y 1.9 millones de palabras. 
+
+Con este método se espera obtener mayor diversidad en el vocabulario en comparación a utilizar un tesauro y obtener palabras muy similares que se emplean en el mismo contexto.
+
+\subsubsection{Sustitución con restricción $\chi2$  y reemplazo mediante similitud relacional}
+A diferencia del método anterior, una vez calculado el número $r$ de palabras a reemplazar, se omiten las palabras con mayor puntuación $\chi^2$ con un nivel de significación estadística de 0.001. Con este método se espera conservar una combinación de estilo y contenido además de agregar variabilidad en los datos. 
+
+\subsubsection{Reemplazo mediante similitud relacional equivalente}
+En la fase de selección se fija el valor del parámetro $p=$ 0.2 y en la fase de reemplazo se utiliza la similitud relacional positiva; esto es obtener un vocabulario muy similar a la etiqueta de la clase pero no el mismo. Las relaciones buscadas se enlistan en la tabla \ref{table:etiquetas} para cada tarea de clasificación. Por ejemplo, para buscar las palabras candidatas a la palabra ``boyfriend", se utiliza la relación \textit{``depressed"} es a \textit{``boyfriend"} como \textit{``anxious"} es a \textbf{?}. 
+
+\subsubsection{Reemplazo mediante similitud relacional contraria}
+Este último método es similar al método anterior, lo único que cambia es la clase objetivo, en este caso se toman los documentos de clase opuesta (la clase negativa). Por ejemplo para buscar las palabras candidatas a la palabra ``boyfriend", se utiliza la relación \textit{``happiness"} es a \textit{``boyfriend"} como \textit{``anxious"} es a \textbf{?}. La tabla \ref{table:etiquetas} resume las etiquetas empleadas para realizar el aumento.
+
+\input{sections/tables/labels_methods}
+
+\subsubsection{Ejemplos del aumento de datos}
+En la tabla \ref{table:ejemplos_pos} se presentan diversos ejemplos de aumento, el método basado en tesauro agrega un vocabulario mas formal, en comparación con los basados en similitudes relacionales. El método basado en restricción $\chi^2$ conserva palabras importantes como ``feel", mientras que los otros no toman en consideración esto. Por otra parte el método basado en relaciones equivalentes agrega la palabra \textit{``unfortunate"} como una palabra relacionada a la palabra \textit{``unhappy"}.
+
+La tabla \ref{table:ejemplos_contraria} presenta ejemplos del aumento basado en relaciones contrarias, las palabras relacionadas a un contexto feliz, son llevadas a un contexto contrario. Por ejemplo el verbo \textit{``talked"} es reemplazado por \textit{``complained"} y \textit{``bothered"}.
+\input{sections/tables/ejemplos_pos}
+
+\input{sections/tables/ejemplos_contraria}
+
+ 
+\subsection{Configuración de los modelos de aprendizaje}
+
+Para evaluar el efecto del aumento de datos se utilizaron dos arquitecturas de aprendizaje profundo. Ambas son arquitecturas con resultados relevantes en tareas de clasificación de textos: una red LSTM bidireccional y una red convolucional CNN. Cada arquitectura tiene diferencias, por ejemplo, al considerar el aspecto secuencial inherente de un texto, en el caso de la red recurrente; o cuando se consideran subsecuencias como elementos aislados en el caso de la red convolucional.
+
+A pesar de que el enfoque principal de este trabajo está enfocado al efecto del aumento de datos en redes neuronales profundas, también se realizaron experimentos en modelos tradicionalmente usados en la clasificación de textos. El objetivo es tener valores de referencia respecto a los métodos propuestos. 
+
+Como métodos de clasificación tradicional, se usaron las Máquinas de Soporte Vectorial, considerando el desbalanceo o no al modificar el parámetro de regularización $c$. Nos referiremos al modelo que no considera el desbalanceo como SVM y cuando se considera lo indicamos como SVM-C. 
+
+
+\subsubsection{Modelos lineales}
+ El primer modelo es construido mediante una Máquina de Soporte Vectorial (SVM) con kernel lineal, la entrada es el historial completo de un usuario representado como un vector de características mediante el pesado \textit{tf-idf} y normalizado mediante la norma $l2$, las palabras de paro se mantienen y se utiliza todo el vocabulario extraído como características. 
+ 
+ El segundo algoritmo utilizado, SVM-C,  es basado en el primer modelo, con la diferencia de que en este caso se modifica el parámetro de regularización $C$ y automáticamente se ajustan los pesos inversamente proporcional a la frecuencia de las clases en los datos de entrada de acuerdo la ecuación \ref{eq:weights_balance}
+ 
+ \begin{equation}
+ \label{eq:weights_balance}
+     C = N/2c_n
+ \end{equation}
+ 
+ En donde $N$ es el número total de ejemplos y $c_n$ el número de ejemplos en la clase $c$.  
+
+\subsubsection{Modelos basados en redes neuronales}
+
+Con el objetivo principal de establecer las bases sobre en que tipo de arquitecturas es más recomendable realizar aumento de datos. Se implementan dos arquitecturas diferentes: una red Bidireccional LSTM (Bi-LSTM) y una red convolucional (CNN); teniendo en común la capa de entrada y capa de salida.
+
+La \textbf{capa de entrada} recibe una secuencia de 64 palabras, cada palabra es representada por un vector de 300 dimensiones obtenido del modelo pre-entrenado FastText\footnote{https://fasttext.cc/docs/en/crawl-vectors.html} , si alguna palabra no está en el vocabulario, su vector es obtenido de la representación de sus n-gramas de caracteres. En el entrenamiento esta capa es estática para reducir el número de parámetros entrenables.
+
+La \textbf{capa de salida} es una neurona que recibe como entrada la última capa oculta del modelo, la representación aprendida de los parámetros internos. Mediante la función sigmoide, ecuación \ref{eq:sigmoide}, se calcula la probabilidad de que la secuencia de palabras pertenezca a la clase 0 o a la clase 1.
+
+\begin{equation}
+    \label{eq:sigmoide}
+    sigmoid(x) = \frac{1}{1+ e^{-x}}
+\end{equation}
+
+Para inicializar los pesos de la capa final correctamente, el \textit{bias} (sesgo) inicial se deriva de la ecuación \ref{eq:bias}.  Con la inicialización correcta la función de perdida inicial se debe aproximar a $ln(2)=$ 0.69314. 
+
+\begin{equation}
+\label{eq:bias}
+\begin{split}
+    p_0= \frac{pos}{pos+neg}= \frac{1}{1+e^{-b_0}}\\
+    b_0=-log_e(\frac{1}{p_0-1})\\
+    b_0=log_e(pos/neg)
+\end{split}
+\end{equation}
+
+Configurando el sesgo inicial correctamente ayuda a la convergencia del modelo desde la primer época.
+
+Derivado de la arquitectura presentada en  \citep{adhikari2019rethinking}, en la figura  \ref{fig:lstm_model}, se presenta la arquitectura empleada para el modelo Bi-LSTM, la red bidireccional se compone de dos redes LSTM con 256 neuronas cada una, posteriormente se aplica una capa de \textit{Dropout} con una tasa de 0.2 , una capa totalmente conectada con 256 unidades, una capa de \textit{Dropout} con una tasa de 0.2 y en la última capa una sola neurona activada mediante la función sigmoide \ref{eq:sigmoide}. Los nodos intermedios de las capas ocultas se activan con la función de activación Relu \ref{eq:RELU}. 
+\input{sections/figures/lstm_model}
+
+En la figura \ref{fig:cnn_model}, se presenta la arquitectura empleada para la red convolucional (CNN), esta arquitectura es basada en el trabajo de \citep{kim2014convolutional}. Se implementan tres tamaños de filtro [3,4,5], cada uno con 300 filtros. Los filtros realizan convoluciones en una matriz que representa a la secuencia de palabras y generan mapas de características de longitud variable; la operación de \textit{Max Pooling }se realiza sobre cada mapa, es decir, se calcula el número mayor de cada mapa de características. A partir de esto se obtienen diferentes vectores de características de diferentes tamaños y la penúltima capa se forma concatenándolos para formar un vector final de características, la capa final recibe este vector de características para clasificar la secuencia de palabras. Los nodos intermedios de las capas ocultas se activan con la función de activación Relu \ref{eq:RELU}. 
+
+\input{sections/figures/cnn_model}
+
+\subsubsection{Entrenamiento}
+Para encontrar los hiperparámetros de los modelos se realizó una división del conjunto de entrenamiento en 3 particiones diferentes (3 K-Folds) con una proporción de 66\% para entrenar y 33\% para evaluar.
+
+En el caso de los modelos de redes neuronales se entrenan de forma que sean sensibles al desbalance \citep{wang2016training}, utilizando un peso adicional para cada clase, calculado mediante la fórmula \ref{eq:weights_balance}. Con esto el error es incrementado para ejemplos en la clase de interés y decrementado para la clase menos importante.
+
+Los parámetros elegidos para el entrenamiento se resumen en la tabla \ref{table:param_redes}. 
+
+\subsubsection{Evaluación}
+
+Como resultado del entrenamiento se tiene un clasificador. Este clasificador es evaluado a través de un conjunto de datos previamente seleccionado, el cual no ha sido utilizado en la fase de entrenamiento. Cabe recordar que dicho clasificador se ha entrenado para determinar la clase de un fragmento del historial de un usuario. De esta forma la predicción final se realiza observando la clase de todos los fragmentos del usuario en evaluación. Si el número de fragmentos pertenecientes a la clase de interés supera cierto umbral, se considera que se tiene suficiente evidencia para determinar que el usuario pertenece a la clase de interés (véase la figura \ref{fig:metodologia}). 
+
+\input{sections/tables/param_redes}
+
+\subsubsection{Implementación}
+Para el preprocesamiento y el etiquetado de las secuencias de texto se utilizó la librería NLTK \citep{loper2002nltk}, para la normalización y el cálculo de medidas de similitud de los embeddings la librería gemsin\footnote{www.radimrehurek.com/gensim}.
+Los modelos lineales fueron implementados utilizando la librería sckit-learn\footnote{www.scikit-learn.org/stable/} \citep{scikitlearn}, los modelos neuronales\footnote{www.tensorflow.org} \citep{tensorflow2015whitepaper}. Todas en su última versión mediante en el lenguaje de programación Python. Finalmente el 50\% de los modelos fueron entrenados con una computadora personal y el 50\% en Colab\footnote{colab.research.google.com} (Una herramienta de acceso gratuito para entrenar redes neuronales en la nube).

@@ -2,7 +2,7 @@
 El pre-procesamiento y la extracción de características son pasos muy importantes en la clasificación de textos, en las siguientes secciones se presentan algunas de las técnicas más empleadas y se mencionan dos métodos de representación de características: la bolsa de palabras y las representaciones distribucionales.
 
 \subsection{Pre-procesamiento}
-Dependiendo de la tarea de clasificación, algunos elementos pueden desecharse para enfocar nuestra atención en los elementos más informativos. Algunos de estos elementos son: palabras de paro, errores gramaticales, signos de puntuación etc. Además de esto, el texto extraído de redes sociales contiene enlaces de internet, menciones de usuario, etiquetas (conocidos como hashtags), emoticonos y un vocabulario muy informal (p.e. abreviaturas no convencionales).  A continuación se explica brevemente algunas técnicas empleadas para el limpiado y pre-procesamiento de textos.
+Dependiendo de la tarea de clasificación, algunos elementos pueden desecharse para enfocar nuestra atención en los elementos más informativos. Algunos de estos elementos son: palabras de paro, errores gramaticales, signos de puntuación, etc. Además de esto, el texto extraído de redes sociales contiene enlaces de internet, menciones de usuario, etiquetas (conocidos como hashtags), emoticonos y un vocabulario muy informal (p.e. abreviaturas no convencionales).  A continuación se explica brevemente algunas técnicas empleadas para el limpiado y pre-procesamiento de textos.
 
 \begin{enumerate}
 \item \textbf{Tokenización}: Es un método de pre-procesamiento en el cual se divide una cadena de caracteres en palabras, frases, símbolos y otros elementos dentro del texto llamados \textit{tokens} \citep{kowsari2019text}. Se pueden utilizar diferentes algoritmos para poder realizarlo lo más simple es separar el texto mediante un espacio o caracter común, por ejemplo:
@@ -13,11 +13,11 @@ Los tokens del texto anterior son los siguientes: \{``Los'',  ``días'', ``de'',
 
 \item \textbf{Palabras de paro}: Son palabras con mayor frecuencia en los documentos, y por lo tanto poco útiles para la discriminación entre documentos de diferentes clases. Ejemplos de ellas son: \{``\textit{a}'' ``\textit{the}'', ``\textit{they}'', ``\textit{he}'' , ``\textit{she}'', ...\} (para el idioma Inglés). En algunas tareas de clasificación de textos las palabras de paro no son de importancia y lo más común es removerlas de los documentos o textos. Nothman \citep{nothman2018stop} presenta un análisis de las palabras de paro.
 
-\item \textbf{Capitalización}: Los textos contienen diversas formas de capitalización de palabras para formar una oración. Dado que los documentos consisten en muchas oraciones, una capitalización diversa puede ser muy problemática en la clasificación de textos largos. Lo técnica mas común para tratar la capitalización inconsistente es reducir cada palabra a minúsculas \citep{kowsari2019text}.
+\item \textbf{Capitalización}: Los textos contienen diversas formas de capitalización de palabras para formar una oración. Dado que los documentos consisten en muchas oraciones, una capitalización diversa puede ser muy problemática en la clasificación de textos largos. La técnica más común para tratar la capitalización inconsistente es reducir cada palabra a minúsculas \citep{kowsari2019text}.
 
 \item \textbf{Reducción de ruido}: La mayoría de los textos contienen caracteres innecesarios para la clasificación de documentos, como signos de puntuación o caracteres especiales. En tareas como detección de autoría pueden ser útiles pero en general agregan ruido a los modelos de clasificación de textos.
 
-\item \textbf{Stemming}: Es el proceso de convertir palabras a su forma base o raíz  (e.g., morfema base del significado) \citep{kamath2019deep}. Uno de los algoritmos mas populares es el algoritmo de Poter \citep{porter2001snowball}.
+\item \textbf{Stemming}: Es el proceso de convertir palabras a su forma base o raíz  (e.g., morfema base del significado) \citep{kamath2019deep}. Uno de los algoritmos más populares es el algoritmo de Poter \citep{porter2001snowball}.
 
 \item \textbf{Lematización}:  Es el proceso de convertir palabras a su forma base o raíz, a diferencia del proceso de stemming es que en este proceso el significado y el contexto puede ser conservado. La desventaja es que este método requiere un diccionario y tablas de búsqueda \citep{kamath2019deep}.
 
@@ -37,7 +37,7 @@ Bi-gramas:\{``con el", ``el tiempo", ``tiempo todo", ``todo pasa"\}
 
 
 \subsection{Bolsa de palabras BoW}
-El modelo de bolsa de palabras o BoW (por sus siglas en inglés ``Bag of Words'') es una representación simplificada de un texto. Normalmente, se utiliza un criterio o pesado específico, como lo puede ser la frecuencia de cada palabra, para representar cada texto . Es decir, en el modelo BoW, el conjunto de documentos es representado mediante una matriz de pesos, siendo las columnas palabras únicas del conjunto de datos y las filas cada documento. Este modelo es muy simple, donde no es posible capturar el orden secuencial de las palabras -como en una oración o un documento-, con lo que las relaciones semánticas entre las palabras se pierden. Sin embargo, en este modelo las palabras capturan el contenido de un documento y esta representación puede ser utilizada para determinar el tema principal de dicho documento \citep{kowsari2019text}.
+El modelo de bolsa de palabras o BoW (por sus siglas en inglés ``Bag of Words'') es una representación simplificada de un texto. Normalmente, se utiliza un criterio o pesado específico, como lo puede ser la frecuencia de cada palabra, para representar cada texto . Es decir, en el modelo BoW, el conjunto de documentos es representado mediante una matriz de pesos, siendo las columnas palabras únicas del conjunto de datos y las filas representan un documento. Este modelo es muy simple, donde no es posible capturar el orden secuencial de las palabras -como en una oración o un documento-, con lo que las relaciones semánticas entre las palabras se pierden. Sin embargo, en este modelo las palabras capturan el contenido de un documento y esta representación puede ser utilizada para determinar el tema principal de dicho documento \citep{kowsari2019text}.
 
 
 %\textbf{Ejemplo de BoW}
@@ -78,7 +78,7 @@ El modelo de bolsa de palabras o BoW (por sus siglas en inglés ``Bag of Words''
 
 % \textbf{Pesos para el documento ejemplo}: [1, 2, 2, 1, 3, 2, 2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 5, 1, 2, 1, 1, 1, 1, 2, 1, 2, 3, 1, 2, 3, 1]
 
-\subsubsection{Pesado de palabras}La forma mas básica de pesado de características es mediante el pesado TF (\textit{term frequency} por sus siglas en inglés), el cual consiste en contar el número de ocurrencias de cada palabra en el conjunto de datos. Los métodos basados en TF generalmente consisten en representar la frecuencia de palabras como un peso escalado o normalizado, aunque es de fácil implementación y muy intuitivo este método está limitado por el hecho de que las palabras más comunes pueden dominar la representación.
+\subsubsection{Pesado de palabras}La forma más básica de pesado de características es mediante el pesado TF (\textit{term frequency} por sus siglas en inglés), el cual consiste en contar el número de ocurrencias de cada palabra en el conjunto de datos. Los métodos basados en TF generalmente consisten en representar la frecuencia de palabras como un peso escalado o normalizado, aunque es de fácil implementación y muy intuitivo este método está limitado por el hecho de que las palabras más comunes pueden dominar la representación.
 
 \subsubsection{TF-IDF Term Frequency-Inverse Document Frequency} Esta técnica de  pesado fue propuesta por \citep{jones1972statistical}, con el objetivo de mitigar el efecto de las palabras más comunes en el corpus. IDF asigna menos peso a aquellas palabras que por estar presentes en la mayoría de los documentos de la colección no son útiles para identificar patrones discriminativos. La representación matemática del peso de un término en un documento por TF-IDF está dada en la ecuación \ref{eq:tf_idf}
 
@@ -91,10 +91,9 @@ Su principal objetivo es capturar el significado semántico de las palabras, en 
 
 %Poner un diagrama
 %\subsection{Glove}
-Es un modelo similar Word2Vec, fue propuesto por \citep{pennington2014glove} y su objetivo principal de capturar contextos globales combinando factorización de matrices y ocurrencias locales. Este modelo demostró ser mar rápido en entrenamiento y mejora en tareas como analogía (en comparación con Word2Vec). Los autores generaron diferentes modelos pre-entrenados para su libre acceso, estos modelos fueron entrenados sobre grandes conjuntos de datos como CRAWL\footnote{www.commoncrawl.org} y Wikipedia\footnote{www.wikipedia.org}.
-%Agregar enlaces a paginas.
+Es un modelo similar Word2Vec, fue propuesto por \citep{pennington2014glove} y su objetivo principal de capturar contextos globales combinando factorización de matrices y ocurrencias locales. Este modelo demostró ser más rápido en entrenamiento y mejora en tareas como analogía (en comparación con Word2Vec). Los autores generaron diferentes modelos pre-entrenados para su libre acceso, estos modelos fueron entrenados sobre grandes conjuntos de datos como CRAWL\footnote{www.commoncrawl.org} y Wikipedia\footnote{www.wikipedia.org}.
 
 %\subsection{FastText}
 Otro modelo distribucional es el llamado FastText. Este modelo fue desarrollado por el laboratorio de inteligencia artificial de Facebook \citep{mikolov2017advances}. A diferencia de los modelos anteriores este modelo considera la morfología de las palabras, cada vector es enriquecido con una bolsa de vectores de caracteres de n-gramas que es derivada de una matriz de co-ocurrencia. La  principal ventaja de este modelo es su habilidad de obtener vectores para palabras fuera del vocabulario. Los vectores pre-entrenados están disponibles en la página oficial de FastText\footnote{www.fasttext.cc}  y la última liberación fue un modelo entrenado en 157 idiomas \citep{grave2018learning}.
 
-Para un mayor detalle de la teoría y el calculo de este tipo de representaciones consultar el capitulo 5 del libro de \cite{kamath2019deep}.
+Para un mayor detalle de la teoría y el cálculo de este tipo de representaciones consultar el capítulo 5 del libro de \citep{kamath2019deep}.

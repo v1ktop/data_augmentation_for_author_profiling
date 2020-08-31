@@ -2,10 +2,8 @@
 
 En el capítulo 3 se describieron los principales retos del perfilado de autor y las principales características de los métodos existentes para el aumento de datos en la clasificación de textos. Observando las características de los métodos de aumento de datos existentes, en este capítulo se describen los métodos propuestos para realizar el aumento de datos para tareas relacionadas al perfilado de autor. 
 
-Como se mostró en el capítulo anterior, existen numerosas técnicas de aumento de datos sin embargo no todas son generalizables o escalables, además de que en el caso de perfilado de autor se desea conservar tanto el estilo como el contenido de un texto. De ahí que la mejor forma de realizar el aumento de datos en esta tarea es mediante el parafraseo humano, pero debido a su costo, no siempre es posible. Sin embargo nos podemos apoyar de técnicas automáticas para aproximarse al parafraseo \cite{androutsopoulos2010survey}. 
-%Ejemplos de estas técnicas son el reemplazo por sinónimos -reemplazando una palabra o frase por un sinónimo o frase- en el contexto apropiado, resultando en un parafraseo de la frase original \cite{bhagat2013paraphrase}.
+Como se mostró en el capítulo anterior, existen numerosas técnicas de aumento de datos sin embargo no todas son generalizables o escalables, además de que en el caso de perfilado de autor se desea conservar tanto el estilo como el contenido de un texto. De ahí que la mejor forma de realizar el aumento de datos en esta tarea es mediante el parafraseo humano, pero debido a su costo, no siempre es posible. Sin embargo nos podemos apoyar de técnicas automáticas para aproximarse al parafraseo \citep{androutsopoulos2010survey}. 
 
-%En la figura \ref{fig:aumento} se presenta un esquema general del aumento de datos propuesto. 
 El aumento de datos propuesto busca aproximarse al parafraseo de las frases originales y con ellas incrementar el conjunto original. Los métodos desarrollados en este trabajo tienen dos pasos generales que se describen a continuación: 
 
 \begin{enumerate}
@@ -13,11 +11,6 @@ El aumento de datos propuesto busca aproximarse al parafraseo de las frases orig
     \item \textbf{Reemplazo de palabras seleccionadas}: Una vez determinado el subconjunto de palabras a reemplazar, se deberán identificar nuevas palabras que no alteren significativamente el sentido de la frase original. Para ello se recurre a un recurso externo, tal como un tesauro, un diccionario, o incluso a modelos distribucionales de vectores de palabras.
     Una vez identificadas las palabras sustitutas se reconstruye la secuencia manteniendo el orden original para formar la nueva secuencia aumentada. 
 \end{enumerate}
-
-
-
-%El método se ilustra en la figura \ref{fig:aumento} y a continuación se detalla cada uno de sus elementos:
-
 
 
 
@@ -38,7 +31,7 @@ El aumento de datos propuesto busca aproximarse al parafraseo de las frases orig
 
 \section{Selección de palabras a reemplazar}
 
-El primer punto bajo este proceso es el cálculo del número de palabras a reemplazar. Para ello, se retomó el criterio presentado en \cite{zhang2015character}. El número de palabras a reemplazar $r$ se selecciona realizando un muestreo aleatorio de una distribución de probabilidad geométrica. 
+El primer punto bajo este proceso es el cálculo del número de palabras a reemplazar. Para ello, se retomó el criterio presentado en \citep{zhang2015character}. El número de palabras a reemplazar $r$ se selecciona realizando un muestreo aleatorio de una distribución de probabilidad geométrica. 
 
 Una función de probabilidad geométrica es la función de probabilidad del número $X$ del ensayo de Bernoulli de obtener éxito, soportado en el conjunto de los números naturales. Una distribución geométrica da la probabilidad de que la primera ocurrencia de éxito requiere de $k$ ensayos independientes, cada uno con una probabilidad de éxito $p$. Si la probabilidad de éxito de cada ensayo es $p$, entonces la probabilidad de que en el $k$-ésimo ensayo, de $k$ ensayos, sea el primer éxito es representada en la ecuación \ref{eq:geom}.
 
@@ -76,13 +69,13 @@ A través de este método se identifican todas aquellas palabras dependientes de
 
 \section{Reemplazo de palabras seleccionadas}
 
-Una vez identificadas las palabras a reemplazar, el siguiente paso es, mediante la consulta de alguna fuente de conocimientos externa, buscar palabras candidatas similares a la palabra que se desea reemplazar. \cite{zhang2015character} proponen consultar un tesauro con el objetivo de obtener los sinónimos de una palabra, sin embargo el vocabulario contenido en el tesauro puede ser muy limitado o demasiado formal para el contexto del texto a aumentar. 
+Una vez identificadas las palabras a reemplazar, el siguiente paso es, mediante la consulta de alguna fuente de conocimientos externa, buscar palabras candidatas similares a la palabra que se desea reemplazar. \citep{zhang2015character} proponen consultar un tesauro con el objetivo de obtener los sinónimos de una palabra, sin embargo el vocabulario contenido en el tesauro puede ser muy limitado o demasiado formal para el contexto del texto a aumentar. 
 
-Una alternativa es buscar palabras similares a través de representaciones distribucionales de las palabras. Se ha demostrado que estas representaciones capturan  similitudes relacionales, las cuales pueden ser recuperadas por medio de aritmética de vectores \textcolor{red}{[REF]}. El presente trabajo explora dos enfoques de utilizando este recurso. La siguiente sección explica ambos enfoques. 
+Una alternativa es buscar palabras similares a través de representaciones distribucionales de las palabras. Se ha demostrado que estas representaciones capturan  similitudes relacionales, las cuales pueden ser recuperadas por medio de aritmética de vectores \citep{levy2014linguistic}. El presente trabajo explora dos enfoques utilizando este recurso. La siguiente sección explica ambos enfoques. 
 
 %%Agregar referencias 
 \subsection{Similitud relacional}
-La idea principal es reemplazar una palabra en una secuencia por una palabra similar o altamente relacionada por ser utilizadas en contextos similares. Para realizar esto se recupera el vector de la palabra a reemplazar de un modelo pre-entrenado de vectores de palabras y se calcula la distancia respecto a cada vector en el modelo,  mediante la medida de similitud coseno, véase la ecuación \ref{eq:coseno}.
+La idea principal es reemplazar una palabra en una secuencia por una palabra similar o altamente relacionada ya que ambas se utilizan en contextos similares. Para realizar esto se recupera el vector de la palabra a reemplazar de un modelo pre-entrenado de vectores de palabras y se calcula la distancia respecto a cada vector en el modelo pre-entrenado. En este caso, hemos usado la medida de similitud coseno, véase la ecuación \ref{eq:coseno}.
 
 \begin{equation}
 \label{eq:coseno}
@@ -102,13 +95,12 @@ En donde $v$ es una palabra del vocabulario de vectores pre-entrenados excluyend
 
 \subsubsection{Reemplazo por palabras equivalentes}
 %Explicar la idea enfocada al aumento de datos
-Al calcular la similitud coseno entre dos palabras dados sus vectores, es posible encontrar que palabras como \textit{feliz} y \textit{triste} suelen tener una similitud cercana, aunque son antónimos. Esto sucede por que ambas palabras ocurren en contextos similares. Sustituir palabras por antónimos (en lugar de sinónimos) podría causar que la etiqueta original del documento se pierda.
+Al calcular la similitud coseno entre dos palabras dados sus vectores, es posible encontrar que palabras como \textit{feliz} y \textit{triste} suelen tener una similitud cercana. Esto sucede por que ambas palabras ocurren en contextos de uso similares. Sin embargo, no deseamos realizar este tipo de sustituciones, ya que sustituir una palabra por su antónimo (en lugar de un sinónimo) podría causar que la etiqueta original del documento se pierda. 
  
- Para resolver este problema en lugar de utilizar la ecuación \ref{eq:cosmax}, buscamos relaciones de similitud entre pares de palabras. 
- Por ejemplo, los vectores codificados de palabras pueden capturar la relación de género en los pares de palabras ``hombre:rey", ``mujer:reina"
- y mediante el uso de aritmética de vectores se puede encontrar dicha relación mediante una pregunta de analogía de la forma `` $w_c$ es a $w$ como $w*$ es a \textbf{?}". 
- 
- Así la palabra ``reina" puede ser recuperada como ``hombre es a rey como mujer es a ?", equivalen a las operaciones con las representaciones vectoriales de las palabras como se muestra en la ecuación \ref{eq:rey} y \ref{eq:rey1}. 
+ Para resolver este problema en lugar de utilizar la ecuación \ref{eq:cosmax}, buscamos relaciones de similitud incluyendo pares de palabras. 
+ Por ejemplo, los vectores codificados de palabras pueden capturar la relación de género en los pares de palabras ``hombre:rey", ``mujer:reina".
+Mediante el uso de aritmética de vectores se puede expresar dicha relación a través de una analogía entre pares de palabras. Así la palabra ``reina"  
+puede ser identificada mediante la analogía ``hombre es a rey como mujer es a ?". De esta forma de manera general podemos expresar una analogía de la forma `` $w_c$ es a $w$ como $w*$ es a $v$", tal como se indica en las ecuaciones \ref{eq:rey} y \ref{eq:rey1}. 
  
  \begin{equation}
     \label{eq:rey}
@@ -123,7 +115,7 @@ Al calcular la similitud coseno entre dos palabras dados sus vectores, es posibl
 
  El objetivo principal es encontrar palabras candidatas $v$ que comparten la misma relación reflejada en $w-w_c$ pero no necesariamente similar a $w$. 
  
-Para encontrar las palabras candidatas $v$ utilizamos el método 3COSMUL \cite{levy2014linguistic}, ecuación \ref{eq:1}:
+Para encontrar las palabras candidatas $v$ utilizamos el método 3COSMUL \citep{levy2014linguistic}, ecuación \ref{eq:1}:
 
 \begin{equation} \label{eq:1}
     argmax_{v \in V}\frac{cos(v,\hat{w_c}) cos (v,w)}{cos (v,w_c)+ \epsilon}
@@ -131,16 +123,29 @@ Para encontrar las palabras candidatas $v$ utilizamos el método 3COSMUL \cite{l
 
 Siendo $w$ la palabra a reemplazar, $w_c$ la palabra representativa de la clase positiva y $w*$ una de las palabras más similares a $w_c$, $V$ es el vocabulario de los vectores pre-entrenados, $\epsilon$  es un número pequeño para evitar una división por cero (puede ser 0.0001 ).
 
-\textcolor{blue}{La idea de realizar este tipo de aumento fue presentada por primera vez por \cite{zhang2019integrating}, con la idea de llevar un texto de un tema a otro, y le nombraron como traducción de temas. La idea consiste en tomar todas las palabras reemplazables y llevarlas al contexto de una clase deseada. Sin embargo en este trabajo se persigue el objetivo de encontrar relaciones de equivalencia, es decir encontrar palabras muy relacionadas a la clase que se desea aumentar y no cambiarlas de tema completamente. VER EL COMENTARIO}
+%\textcolor{blue}{La idea de realizar este tipo de aumento fue presentada por primera vez por \citep{zhang2019integrating}, con el objetivo de llevar un texto de un tema a otro, y le nombraron como traducción de temas. La idea consiste en tomar todas las palabras reemplazables y llevarlas al contexto de una clase deseada. Sin embargo en este trabajo se persigue el objetivo de encontrar relaciones de equivalencia, es decir encontrar palabras muy relacionadas a la clase que se desea aumentar y no cambiarlas de tema completamente. VER EL COMENTARIO}
 
 
 
 \subsubsection{Reemplazo por palabras opuestas}
 
-\textcolor{red}{Es muy importante motivar este punto, es una parte importante de tu tesis, así que hay que describir cómo se te ocurre, bajo que hipótesis crees que funcionará, etc. en fin, echarle crema a tus tacos} 
-En ocasiones la mayoría  del vocabulario aumentado para la clase positiva existe también en la clase negativa, este método busca incorporar el vocabulario de la clase negativa en el contexto de la positiva. Para esto tomamos el conjunto de documentos de la clase negativa y en la fase de reemplazo trasladamos las palabras a reemplazar a la clase positiva mediante la ecuación \ref{eq:1}.
+%\textcolor{red}{Es muy importante motivar este punto, es una parte importante de tu tesis, así que hay que describir cómo se te ocurre, bajo que hipótesis crees que funcionará, etc. en fin, echarle crema a tus tacos}
 
-Por ejemplo, podemos trasladar la palabra \textit{``reír"} de un texto de la clase negativa \textit{``feliz"} a la positiva \textit{``deprimido"}, resolviendo la analogía $feliz:reir::deprimido:?$.
+En escenarios desbalanceados el aumento de datos puede llevarnos a un sobre muestreo de la clase minoritaria,  generalmente la clase de interés. Los métodos presentados anteriormente fueron diseñados para aumentar esta clase minoritaria (a la cual también nos referimos como clase positiva). Sin embargo, una desventaja de realizar esto es que el modelo de aprendizaje se restringe al vocabulario de la clase positiva lo que provoca un sobre ajuste. En un intento por contrarestar esta situación, se propone un método que incorpora documentos seleccionados de la negativa a la clase positiva. Por supuesto, para ello es necesario realizar una transformación de las instancias negativas.
+
+Para llevar a cabo esta transformación adaptamos el método propuesto por \citep{zhang2019integrating}. En dicho método se aborda el problema de  \textit{zero-shot text classification} para ello toma un documento de una clase etiquetada y lo \textit{traduce} para considerarlo como instancia de una clase totalmente nueva. Este método no tiene ninguna restricción respecto sobre las palabras a reemplazar, en nuestro caso hemos incluido un criterio de selección para guiar la generación de los nuevos  documentos que servirán para aumentar el conjunto de la clase de interés.   
+
+La idea básica de la transformación recae en el mismo método visto en la sección anterior. Sin embargo, los pares de palabras usadas para representar la analogía son escogidas para identificar palabras con una relación opuesta. Así por ejemplo, en el caso de la tarea de detección de depresión, asociaremos la palabra \textit{``feliz"} como representativa de la clase \textit{no deprimidos}  y la palabra \textit{``triste"}  para la clase \textit{deprimidos}. Ahora bien, reemplazaremos palabras de documentos de la clase \textit{no deprimidos} por palabras que presentan la relación opuesta deseada, la cual es guiada por el par de palabras \textit{feliz} vs \textit{triste}. 
+
+%a la clase \textit{deprimidos} buscamos una palabra relacionada con depresión, puede ser ``triste" y finalmente  buscamos palabras cercanas o relacionadas a ``triste" pero lejos de ``feliz". Este objetivo se logra aplicando operaciones de vectores mediante el método 3COSMUL como se explica en la sección anterior.
 
 
+%\subsection{Métodos propuestos}
+%De las secciones anteriores se resumen los tres métodos propuestos.
+
+%\subsubsection{Restricción $\chi^2$}
+
+%\subsubsection{Relaciones equivalentes}
+
+%\subsubsection{Relaciones contrarias}
 

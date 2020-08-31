@@ -1,8 +1,9 @@
 \begin{table}[hbt!]
-\caption{Ejemplos del aumento de datos.} 
+\caption{Ejemplos del aumento de datos, las palabras resaltadas en negritas son las que resultaron afectadas después de la transformación.} 
 \label{table:ejemplos_pos}
 \begin{center}
 
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{ll}
 \hline
 \rowcolor[HTML]{EFEFEF} 
@@ -10,13 +11,14 @@
 \rowcolor[HTML]{FFFFFF} 
 Sin Aumento     & a lot of the time i have trouble communicating why i feel so unhappy          \\ \hline
 \rowcolor[HTML]{FFFFFF} 
-Thesauro        & a lot of the time i hold trouble communicating why i feel thusly infelicitous \\ \hline
+Thesauro        & a lot of the time i \textbf{hold} trouble communicating why i feel \textbf{thusly infelicitous} \\ \hline
 \rowcolor[HTML]{FFFFFF} 
-Sin Restricción & a lots of the time i have trouble communicating why i feeling so unhappy      \\ \hline
+Sin Restricción & a \textbf{lots} of the time i have trouble communicating why i \textbf{feeling} so unhappy      \\ \hline
 \rowcolor[HTML]{FFFFFF} 
-Restricción Xi2 & a lot of the time i have difficulty informing why i feel so unhappy           \\ \hline
+Restricción $\chi^2$ & a lot of the time i have \textbf{difficulty} \textbf{informing} why i feel so unhappy           \\ \hline
 \rowcolor[HTML]{FFFFFF} 
-Equivalencia    & a much of the place i have troubles informing why i feeling so unfortunate    \\ \hline
+Equivalencia    & a \textbf{much} of the \textbf{place} i have \textbf{troubles informing} why i \textbf{feeling} so \textbf{unfortunate}    \\ \hline
 \end{tabular}
+}
 \end{center}
 \end{table}

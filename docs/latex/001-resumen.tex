@@ -1,15 +1,4 @@
 \chapter{Resumen}
-%El aumento de datos consiste en crear un nuevo conjunto realista mediante una serie de transformaciones a un ejemplo. En este trabajo se proponen diferentes estrategias para el aumento de datos en perfilado de situaciones médicas. 
-
-%El aumento de datos es una técnica mayormente empleada en la clasificación de imágenes y recientemente a crecido un interés para aplicarlo en la clasificación textos. 
-%Se han propuesto diversas estrategias para el aumento de datos en tareas de clasificación de textos pero ni una específicamente para tareas relacionadas al perfilado de autor.
-
-%Esta tesis propone un esquema general para el aumento de datos con diferentes estrategias de selección y reemplazo de palabras, principalmente enfocándose a las relaciones de similitud de las palabras. 
-
-%Gracias a los experimentos realizados fue posible concluir que el aumento de datos propuesto puede mejorar la predicción en tareas relacionadas al perfilado de autor, en comparación con no realizar aumento de datos y algoritmos existen para el aumento de datos en la clasificación textos.
-
-%Por ultimo, este trabajo es el primero en demostrar el efecto del aumento de datos en tareas relacionadas al perfilado de autor.
-
 
 Para resolver las tareas de perfilado de autor, la mayoría de los trabajos existentes se han enfocado en utilizar algoritmos de aprendizaje computacional en combinación con diferentes técnicas para extraer características. La obtención de dichas características requiere un análisis riguroso y en muchos casos es necesaria la intervención de expertos en el tema. Sin embargo existen técnicas de aprendizaje computacional más complejas como las redes neuronales en donde la extracción de características se realiza de forma automática mediante una serie de abstracciones.
 
@@ -22,6 +11,14 @@ Dada esta problemática este trabajo presenta un estudio sobre el efecto de agre
 Gracias a los experimentos realizados fue posible concluir que el aumento de datos propuesto puede mejorar la predicción en tareas relacionadas al perfilado de autor, en comparación con no realizar aumento de datos y algoritmos existen para el aumento de datos en la clasificación textos.
 
 \chapter{Abstract}
+
+The main motivation for the use of neural networks in author profiling is due to the incredible success of deep learning in complex tasks of natural language processing. According to the state of the art in the last PAN @ CLEF conference, the teams with the best results used traditional learning techniques. So also in the ERISK tasks the best system was built by extracting characteristics in combination with an assemble of ``bags of words" and different classifiers. What has been observed in the different reports of these conferences is that the learning models based on neural networks had not the expected success.
+
+One of the main problems within is the amount of tagged data that is available and it becomes more noticeable when using deep learning models. In the case of author profiling, obtaining this manually tagged data is time-consuming, expensive, and could also lead to legal problems due to the use of personal data.
+
+Given this problem, this work presents a study on the effect of adding new, artificially generated documents, by increasing data at a structural level, to the original training set and the effect it has on the neural network algorithms applied in tasks related to the profiling of Author. To do this, this thesis proposes a general scheme for increasing data with different strategies for selecting and replacing words, mainly focusing on the similarity relationships of words.
+
+Thanks to the experiments carried out, it was possible to conclude that the proposed increase in data can improve prediction in tasks related to author profiling, compared to not performing data augmentation, and current algorithms for increasing data in text classification.
 
 
 
