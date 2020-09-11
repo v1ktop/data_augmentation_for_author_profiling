@@ -36,7 +36,7 @@ Las funciones de decisión deben ser lineales en sus parámetros pero no están 
 
 En la ecuación \ref{eq:percetron} $ \phi_i$ son funciones predefinidas de $x$ y $w_i$ y $b$ son los parámetros ajustables a aprender.
 
-En la formulación de \citep{boser1992training, cortes1995support} podemos encontrar como aproximar este tipo de funciones construyendo hiperplanos separados que maximicen un margen, mediante algoritmos de optimización numérica. \\
+En la formulación de \citep{boser1992training, cortes1995support} podemos encontrar como aproximar este tipo de funciones construyendo hiperplanos separados que maximicen un margen, mediante algoritmos de optimización numérica.
 
 Las ventajas\footnote{Listadas en https://scikit-learn.org/stable/modules/svm.html} de SVM son: 
 \begin{itemize}
@@ -48,7 +48,7 @@ Las ventajas\footnote{Listadas en https://scikit-learn.org/stable/modules/svm.ht
 
 Las desventajas incluyen:
 \begin{itemize}
-    \item Si el número de características es mucho mayor al número de ejemplos, elegir una función de núcleo y término de regularización es crucial para evitar el sobre ajuste.
+    \item Si el número de características es mucho mayor al número de ejemplos, elegir una función de núcleo y término de regularización es crucial para evitar el sobre ajuste. Este problema es común en el análisis de historiales muy extensos extraídos de redes sociales.
     \item Las SVMs no otorgan directamente estimaciones de probabilidad, estas son calculadas utilizando validación cruzada.
     
 \end{itemize}

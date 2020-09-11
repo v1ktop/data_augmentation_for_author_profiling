@@ -14,21 +14,6 @@ El aumento de datos propuesto busca aproximarse al parafraseo de las frases orig
 
 
 
-
-
-%\begin{enumerate}
-%    \item \textbf{Texto original}: La entrada es una secuencia de palabras $S$ de tamaño $n$, la cual se divide en tokens mediante un separador (p. e. puede ser un espacio o una expresión regular).
-%    \item \textbf{Selección de palabras a reemplazar}: mediante algún criterio de selección se identifica un subconjunto de tokens $S_1$ del conjunto $S$ de tamaño $r$. 
-%    \item \textbf{Identificación de palabras sustitutas}: Una vez determinado el subconjunto $S_1$ de palabras a reemplazar, se crean los conjuntos $R_{w_i}$ con posibles palabras sustitutas para cada palabra $w_i \in S_1$. Para ello se utiliza un recurso externo. Este recurso puede ser un tesauro, un diccionario o modelos pre-entrenados de vectores de palabras.
-%    \item \textbf{Reemplazo}: Mediante algún criterio de similitud buscamos la palabra $w'_i$ que reemplazará a la palabra $w_i$ para cada conjunto $R_{w_i}$. Una vez identificadas todas las palabras sustitutas se reconstruye la secuencia manteniendo el orden original para formar la nueva secuencia aumentada $S_{aug}$. 
-%    \item \textbf{Reemplazo}: La última fase reemplaza las palabras seleccionadas por las palabras candidatas encontradas en el recurso externo.
-%\end{enumerate}
- 
-%\input{sections/figures/word_level}
-
-%El problema principal radica en como realizar la selección de palabras, de tal forma que se conserve tanto el estilo como el contenido de la secuencia original $S$. Para esto se proponen diferentes métodos enfocados a distintos aspectos en el proceso de selección y reemplazo.
-
-
 \section{Selección de palabras a reemplazar}
 
 El primer punto bajo este proceso es el cálculo del número de palabras a reemplazar. Para ello, se retomó el criterio presentado en \citep{zhang2015character}. El número de palabras a reemplazar $r$ se selecciona realizando un muestreo aleatorio de una distribución de probabilidad geométrica. 
@@ -131,21 +116,10 @@ Siendo $w$ la palabra a reemplazar, $w_c$ la palabra representativa de la clase 
 
 %\textcolor{red}{Es muy importante motivar este punto, es una parte importante de tu tesis, así que hay que describir cómo se te ocurre, bajo que hipótesis crees que funcionará, etc. en fin, echarle crema a tus tacos}
 
-En escenarios desbalanceados el aumento de datos puede llevarnos a un sobre muestreo de la clase minoritaria,  generalmente la clase de interés. Los métodos presentados anteriormente fueron diseñados para aumentar esta clase minoritaria (a la cual también nos referimos como clase positiva). Sin embargo, una desventaja de realizar esto es que el modelo de aprendizaje se restringe al vocabulario de la clase positiva lo que provoca un sobre ajuste. En un intento por contrarestar esta situación, se propone un método que incorpora documentos seleccionados de la negativa a la clase positiva. Por supuesto, para ello es necesario realizar una transformación de las instancias negativas.
+En escenarios desbalanceados el aumento de datos puede llevarnos a un sobre muestreo de la clase minoritaria,  generalmente la clase de interés. Los métodos presentados anteriormente fueron diseñados para aumentar esta clase minoritaria (a la cual también nos referimos como clase positiva). Sin embargo, una desventaja de realizar esto es que el modelo de aprendizaje se restringe al vocabulario de la clase positiva lo que provoca un sobre ajuste. En un intento por contrarestar esta situación, se propone un método que incorpora documentos seleccionados de la clase negativa a la clase positiva. Por supuesto, para ello es necesario realizar una transformación de las instancias negativas.
 
 Para llevar a cabo esta transformación adaptamos el método propuesto por \citep{zhang2019integrating}. En dicho método se aborda el problema de  \textit{zero-shot text classification} para ello toma un documento de una clase etiquetada y lo \textit{traduce} para considerarlo como instancia de una clase totalmente nueva. Este método no tiene ninguna restricción respecto sobre las palabras a reemplazar, en nuestro caso hemos incluido un criterio de selección para guiar la generación de los nuevos  documentos que servirán para aumentar el conjunto de la clase de interés.   
 
 La idea básica de la transformación recae en el mismo método visto en la sección anterior. Sin embargo, los pares de palabras usadas para representar la analogía son escogidas para identificar palabras con una relación opuesta. Así por ejemplo, en el caso de la tarea de detección de depresión, asociaremos la palabra \textit{``feliz"} como representativa de la clase \textit{no deprimidos}  y la palabra \textit{``triste"}  para la clase \textit{deprimidos}. Ahora bien, reemplazaremos palabras de documentos de la clase \textit{no deprimidos} por palabras que presentan la relación opuesta deseada, la cual es guiada por el par de palabras \textit{feliz} vs \textit{triste}. 
 
-%a la clase \textit{deprimidos} buscamos una palabra relacionada con depresión, puede ser ``triste" y finalmente  buscamos palabras cercanas o relacionadas a ``triste" pero lejos de ``feliz". Este objetivo se logra aplicando operaciones de vectores mediante el método 3COSMUL como se explica en la sección anterior.
-
-
-%\subsection{Métodos propuestos}
-%De las secciones anteriores se resumen los tres métodos propuestos.
-
-%\subsubsection{Restricción $\chi^2$}
-
-%\subsubsection{Relaciones equivalentes}
-
-%\subsubsection{Relaciones contrarias}
 

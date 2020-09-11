@@ -24,22 +24,21 @@ Para el entrenamiento solo se consideraron 16 usuarios para la clase positiva co
 
 \subsection{Pre-procesamiento}
 
-Dado que los documentos extraídos de redes sociales no siguen un lenguaje formal y además de texto existen direcciones de páginas web que los usuarios comparten, emoticonos y cáracteres especiales, entre otros; es necesario que antes del aumento de datos exista un preprocesamiento de los textos como una forma de reducir el ruido de los documentos originales.
+Dado que los documentos extraídos de redes sociales no siguen un lenguaje formal y además de texto existen direcciones de páginas web que los usuarios comparten, emoticonos y caracteres especiales, entre otros; es necesario que antes del aumento de datos exista un preprocesamiento de los textos como una forma de reducir el ruido de los documentos originales.
 
 Los pasos del procesamiento seguido son los siguientes:
 
  \begin{enumerate}
      \item Normalización: Se identifican las páginas web en el texto y se reemplazan mediante la etiqueta http\_
-     \item Tokenización: Utilizando la herramienta NLTK se remueve de cada texto signos de puntuación y cáracteres especiales.
-     \item Segmentación: Los documentos originales son segmentados en pequeños fragmentos. Es decir, cada historial de usuario se fragmenta en secuencias de 64 palabras  (véase la siguiente sección). 
-     %\item Filtro: En la clasificación de documentos no todo el contenido del texto esencial para determinar la categoría a la cual pertenece, es decir existe cierta combinación de palabras que sirven para discriminar la clase. Para determinar estas palabras se emplea el método de selección de características denominado Chi-cuadrada.
+     \item Tokenización: Utilizando la herramienta NLTK se remueve de cada texto signos de puntuación y caracteres especiales.
+     \item Segmentación: Los documentos originales son segmentados en pequeños fragmentos. Es decir, cada historial de usuario se fragmenta en secuencias de 64 palabras  (véase la siguiente sección).
      \item Filtrado: Solo se conservan segmentos identificados como importantes para la clasificación (véase la siguiente sección).
  \end{enumerate}
 
 
 
 \subsubsection{Segmentación y filtrado}
-Con el proposito de que el aumento de datos pueda ser proporcional independientemente de la longitud del documento original. Cada documento se dividió en segmentos de 64 palabras\footnote{Este parámetro se determinó de manera empírica.}. Posteriormente se filtró el conjunto de entrenamiento para conservar solo los segmentos importantes para realizar la clasificación. Es decir, se identificaron aquellos fragmentos con la mayor cantidad de palabras discriminantes. Para ello se identificaron las  palabras más discriminantes dentro del vocabulario del conjunto de entrenamiento mediante la técnica de selección de características $\chi^2$. Posteriormente se conservaron aquellos fragmentos  que contengan un determinado número de palabras con alta puntuación $\chi^2$. 
+Con el propósito de que el aumento de datos pueda ser proporcional independientemente de la longitud del documento original. Cada documento se dividió en segmentos de 64 palabras\footnote{Este parámetro se determinó de manera empírica.}. Posteriormente se filtró el conjunto de entrenamiento para conservar solo los segmentos importantes para realizar la clasificación. Es decir, se identificaron aquellos fragmentos con la mayor cantidad de palabras discriminantes. Para ello se identificaron las  palabras más discriminantes dentro del vocabulario del conjunto de entrenamiento mediante la técnica de selección de características $\chi^2$. Posteriormente se conservaron aquellos fragmentos  que contengan un determinado número de palabras con alta puntuación $\chi^2$. 
 
 Específicamente solo se seleccionaron términos estadísticamente significativos al nivel 0.001, equivalente a una puntuación $\chi^2 > $ 10.83 con un grado de libertad. En la tabla \ref{table:filter_users} se muestran los números de usuarios y secuencias obtenidas después de aplicar este filtro; para el conjunto de depresión el criterio de selección fue que la secuencia contuviera al menos 20 palabras de 1071 palabras con alta puntuación, y para el conjunto de anorexia 15 palabras de 1032. Como puede observarse en ambos casos se trata de umbrales altos. Esto se debe principalmente a que en las palabras con alta puntuación están presentes palabras vacías, palabras que tradicionalmente se eliminan para tareas de clasificación temática. No obstante, en nuestro caso,  se trata de una tarea donde el estilo es importante (p.e. uso de pronombres personales).
 
@@ -47,26 +46,26 @@ Específicamente solo se seleccionaron términos estadísticamente significativo
 
 \subsection{Configuración de los métodos propuestos}
 
-Para comprobar la efectividad del método propuesto se experimenta con  7 configuraciones diferentes: 2 líneas base, 2 métodos del estado del arte y 3 métodos propuestos. Además de esto se introduce un parámetro $n$ para observar el grado pertinente del aumento de datos, el cual indica el número de documentos nuevos aumentados, tomando valores enteros en el rango $[1,10]$.
+Para comprobar la efectividad del método propuesto se experimenta con  7 configuraciones diferentes: 2 líneas base, 2 métodos del estado del arte y 3 métodos propuestos. Además de esto se introduce un parámetro $n$ para observar el grado pertinente del aumento de datos, el cual indica el número de documentos nuevos aumentados por cada documento original, tomando valores enteros en el rango $[1,10]$.
 
 
 \subsubsection{Sin aumento de datos}
 Este método es la primera línea base y solo consideran los datos originales filtrados para el entrenamiento de los modelos (véase la tabla \ref{table:filter_users}).
 
 \subsubsection{Sobre muestreo}
-Esta línea base, consiste en incrementar el número de ejemplos de la clase minoritaria; este método no implica alguna pérdida de información ya que ningún elemento es modificado o descartado. Sin embargo la única desventaja es, que el modelo de aprendizaje generado tiende a sobre ajustarse, debido a que no agrega variabilidad en los datos.
+Esta línea base consiste en incrementar el número de ejemplos de la clase minoritaria mediante su replicación; este método no implica alguna pérdida de información ya que ningún elemento es modificado o descartado. Sin embargo la única desventaja es que el modelo de aprendizaje generado tiende a sobre ajustarse, debido a que no agrega variabilidad en los datos.
 
 \subsubsection{Tesauro}
 Este método del estado del arte fue propuesto por \citep{zhang2015character} y demostró mejoras de un 1 a 2\% en exactitud para la clasificación de opiniones. También fue implementado por \citep{wei2019eda} con algunas modificaciones obteniendo una mejora entre un 1 y 2\% en comparación de no hacer aumento de datos, otros trabajos que utilizan este método como referencia y han encontrado evidencia de que agrega una ganancia en los resultados de clasificación son: \citep{jungiewicz2019towards}, \citep{kumar2019submodular}, \citep{park2019self}.
 
-Para decidir cuantas palabras reemplazar dada una secuencia de palabras, se utiliza el parámetro $p=$ 0.5 para calcular el valor de $r$ palabras a reemplazar, la selección de dichas palabras es aleatoria, el recurso externo para encontrar sinónimos es un tesauro (en este caso Wordnet\footnote{www.wordnet.princeton.edu/}), y finalmente en la fase de reemplazo, de las palabras candidatas, se selecciona el índice dado un número aleatorio $s$ generado de una distribución geométrica con parámetro $q=$ 0.5.
+Para decidir cuantas palabras reemplazar, dada una secuencia de palabras, se calcula un numero aleatorio $r$ generado de una distribución geométrica con un parametro $p=$0.5; el recurso externo para encontrar sinónimos es un tesauro (en este caso Wordnet\footnote{www.wordnet.princeton.edu/}), y finalmente en la fase de reemplazo, de las palabras candidatas, se selecciona un número aleatorio $s$ generado de una distribución geométrica con parámetro $q=$ 0.5.
 
-El propósito de este método es ser muy conservativo en la modificación del texto original y el número $s$ controla la diversidad del vocabulario que por lo generaPara decidir que palabras reemplazarempleada).
+El propósito de este método es ser muy conservativo en la modificación del texto original y el número $s$ controla la diversidad del vocabulario que por lo general para decidir que palabras reemplazar empleada la palabra más utilizada.
 
 \subsubsection{Sustitución sin restricción y reemplazo mediante similitud coseno}
 Diversos estudios sugieren utilizar vectores de modelos pre-entrenados como Word2Vec, Glove, entre otros; la idea es recuperar palabras que se utilizan en contextos similares, en lugar de sinónimos. 
 
-Para decidir que palabras reemplazar se omiten palabras de paro y aquellas que no sean etiquetadas como sustantivos, adjetivos, verbos y adverbios; con el propósito de agregar mas variabilidad en los ejemplos el número $r$ es calculado con el parámetro $p=$ 0.2. En la fase de reemplazo las palabras más similares se seleccionan mediante similitud coseno, utilizándolas de mayor a menor en una selección sin reemplazo.
+Para decidir que palabras reemplazar se omiten palabras de paro y aquellas que no sean etiquetadas como sustantivos, adjetivos, verbos y adverbios; con el propósito de agregar más variabilidad en los ejemplos el número $r$ es calculado con el parámetro $p=$ 0.2. En la fase de reemplazo las palabras más similares se seleccionan mediante similitud coseno, utilizándolas de mayor a menor en una selección sin reemplazo.
 
 El modelo de vectores pre-entrenados para representar las palabras de una secuencia fue Glove\footnote{https://nlp.stanford.edu/projects/glove/} con 300 dimensiones \citep{pennington2014glove}. Este modelo fue pre-entrenado con la base de datos Common Crawl, con 42 millones de  tokens y 1.9 millones de palabras. 
 
@@ -84,7 +83,7 @@ Este último método es similar al método anterior, lo único que cambia es la 
 \input{sections/tables/labels_methods}
 
 \subsubsection{Ejemplos del aumento de datos}
-En la tabla \ref{table:ejemplos_pos} se presentan diversos ejemplos de aumento, el método basado en tesauro agrega un vocabulario mas formal, en comparación con los basados en similitudes relacionales. El método basado en restricción $\chi^2$ conserva palabras importantes como ``feel", mientras que los otros no toman en consideración esto. Por otra parte el método basado en relaciones equivalentes agrega la palabra \textit{``unfortunate"} como una palabra relacionada a la palabra \textit{``unhappy"}.
+En la tabla \ref{table:ejemplos_pos} se presentan diversos ejemplos de aumento, el método basado en tesauro agrega un vocabulario más formal, en comparación con los basados en similitudes relacionales. El método basado en restricción $\chi^2$ conserva palabras importantes como ``feel", mientras que los otros no toman en consideración esto. Por otra parte el método basado en relaciones equivalentes agrega la palabra \textit{``unfortunate"} como una palabra relacionada a la palabra \textit{``unhappy"}.
 
 La tabla \ref{table:ejemplos_contraria} presenta ejemplos del aumento basado en relaciones contrarias, las palabras relacionadas a un contexto feliz, son llevadas a un contexto contrario. Por ejemplo el verbo \textit{``talked"} es reemplazado por \textit{``complained"} y \textit{``bothered"}.
 \input{sections/tables/ejemplos_pos}
@@ -155,10 +154,10 @@ Los parámetros elegidos para el entrenamiento se resumen en la tabla \ref{table
 
 \subsubsection{Evaluación}
 
-Como resultado del entrenamiento se tiene un clasificador. Este clasificador es evaluado a través de un conjunto de datos previamente seleccionado, el cual no ha sido utilizado en la fase de entrenamiento. Cabe recordar que dicho clasificador se ha entrenado para determinar la clase de un fragmento del historial de un usuario. De esta forma la predicción final se realiza observando la clase de todos los fragmentos del usuario en evaluación. Si el número de fragmentos pertenecientes a la clase de interés supera cierto umbral, se considera que se tiene suficiente evidencia para determinar que el usuario pertenece a la clase de interés (véase la figura \ref{fig:metodologia}). 
+Como resultado del entrenamiento se tiene un clasificador. Este clasificador es evaluado a través de un conjunto de datos previamente seleccionado, el cual no ha sido utilizado en la fase de entrenamiento. Cabe recordar que dicho clasificador se ha entrenado para determinar la clase de un fragmento del historial de un usuario. De esta forma la predicción final se realiza observando la clase de todos los fragmentos del usuario en evaluación. Si el número de fragmentos pertenecientes a la clase de interés supera cierto umbral, se considera que se tiene suficiente evidencia para determinar que el usuario pertenece a la clase de interés (véase la figura \ref{fig:metodologia}). En este caso se realizo un promedio de las predicciones pertenecientes a un historial. El umbral de decisión se fijo en 0.5 para los modelos basados en SVM, SVM-C, Bi-LSTM y en 0.4 para la red convolucional CNN.
 
 \input{sections/tables/param_redes}
 
 \subsubsection{Implementación}
 Para el preprocesamiento y el etiquetado de las secuencias de texto se utilizó la librería NLTK \citep{loper2002nltk}, para la normalización y el cálculo de medidas de similitud de los embeddings la librería gemsin\footnote{www.radimrehurek.com/gensim}.
-Los modelos lineales fueron implementados utilizando la librería sckit-learn\footnote{www.scikit-learn.org/stable/} \citep{scikitlearn}, los modelos neuronales\footnote{www.tensorflow.org} \citep{tensorflow2015whitepaper}. Todas en su última versión mediante en el lenguaje de programación Python. Finalmente el 50\% de los modelos fueron entrenados con una computadora personal y el 50\% en Colab\footnote{colab.research.google.com} (Una herramienta de acceso gratuito para entrenar redes neuronales en la nube).
+Los modelos lineales fueron implementados utilizando la librería sckit-learn\footnote{www.scikit-learn.org/stable/} \citep{scikitlearn}, los modelos neuronales\footnote{www.tensorflow.org} \citep{tensorflow2015whitepaper}. Todas las librerías en su última versión utilizando el lenguaje de programación Python. Finalmente el 50\% de los modelos fueron entrenados con una computadora personal y el 50\% en Colab\footnote{colab.research.google.com} (Una herramienta de acceso gratuito para entrenar redes neuronales en la nube).

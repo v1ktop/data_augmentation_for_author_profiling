@@ -13,7 +13,7 @@ Claro está que la tarea no es simple y debido al lenguaje informal de redes soc
 
 Para resolver las tareas de perfilado de autor, la mayoría de los trabajos existentes se han enfocado en utilizar algoritmos de aprendizaje computacional en combinación con diferentes técnicas para extraer características: conteo de palabras \citep{Laserna2014}, identificación de frases personales \citep{Ortega-Mendoza2018}, análisis de emociones \citep{Aragon2019} entre otras técnicas. La obtención de dichas características requiere un análisis riguroso y en muchos casos es necesaria la intervención de expertos en el tema. Sin embargo existen técnicas de aprendizaje computacional más complejas como las redes neuronales en donde la extracción de características se realiza de forma automática mediante una serie de abstracciones.
 
-La principal motivación para el uso de redes neuronales en perfilado de autor, es debido al increíble éxito del aprendizaje profundo en tareas complejas para el entendimiento del lenguaje : parafraseo, traducción automática, analogía, implicación  textual, similitud semántica, etc. En el conjunto de datos GLUE \citep{wang2018glue} los modelos de aprendizaje profundo han superado la puntuación humana, Christopher D. Manning menciona que desde el año 2015 se produjo un tsunami del aprendizaje profundo en el área de procesamiento de lenguaje natural, debido a la gran cantidad de artículos en conferencias de NLP utilizando aprendizaje profundo \citep{Manning2015}.
+La principal motivación para el uso de redes neuronales en perfilado de autor, es debido al increíble éxito del aprendizaje profundo en tareas complejas para el entendimiento del lenguaje : parafraseo, traducción automática, analogía, implicación  textual, similitud semántica, etc. En el conjunto de datos GLUE \citep{wang2018glue} los modelos de aprendizaje profundo han superado la puntuación humana, Christopher D. Manning (Director del laboratorio de inteligencia artificial de la universidad de Stanford) menciona que desde el año 2015 se produjo un tsunami del aprendizaje profundo en el área de procesamiento de lenguaje natural, debido a la gran cantidad de artículos en conferencias de NLP utilizando aprendizaje profundo \citep{Manning2015}.
 
 De acuerdo al estado del arte en la última conferencia del PAN@CLEF los equipos con mejores resultados utilizaron técnicas tradicionales de aprendizaje como lo son máquinas de soporte vectorial SVM en combinación con n-gramas de carácteres. Así también en las tareas del eRISK el mejor sistema se construyó extrayendo características en combinación con un ensamble de bolsas de palabras (BOW por sus siglas en inglés) y diferentes clasificadores. Lo que se ha podido observar en los diferentes reportes de estas conferencias es, que los modelos de aprendizaje basados en redes neuronales no han tenido el éxito esperado. 
 
@@ -28,7 +28,7 @@ Algunas de las principales preguntas a contestar en esta investigación son:
 \begin{enumerate}
     \item {¿Cómo conservar el estilo y contenido para el aumento de datos en perfilado de autor?}
     \item ¿En qué tipo de arquitecturas basadas en redes neuronales tiene mayor impacto el aumento de datos?
-    \item ¿Se puede mejorar el perfilado de trastornos mentales mediante el aumento de datos?
+    \item ¿Se puede mejorar el perfilado de usuarios que sufren un trastorno mental mediante el aumento de datos?
 \end{enumerate}
 
 
@@ -40,7 +40,7 @@ Proponer un método de aumento de datos, considerando estilo y contenido del tex
 \section{Objetivos específicos}
 \begin{enumerate}
     \item Diseñar diferentes estrategias de aumento de datos bajo condiciones supervisadas, que permita conservar el estilo y contenido del documento original y a la vez aumentar el vocabulario.
-    \item Demostrar el efecto del aumento de datos tanto en modelos de redes neuronales como en modelos lineales.
+    \item Demostrar el efecto del aumento de datos tanto en modelos de redes neuronales como en modelos de aprendizaje supervisado tradicionales.
     \item Evaluar y analizar los métodos propuestos para abordar el perfilado de condiciones médicas en redes sociales.
  
 \end{enumerate}
@@ -62,13 +62,13 @@ Esta tesis está organizada de la siguiente forma:
 %%%Cuadro comparativo de ventajas y desventajas de los diferentes metodos
 
 
-\item Capítulo 4: \textbf{Métodos propuestos}: En este capítulo se describen a detalle los métodos propuestos, su justificación y el enfoque supervisado aplicado.
+\item Capítulo 4: \textbf{Método propuesto}: En este capítulo se describen a detalle los métodos propuestos, su justificación y el enfoque supervisado aplicado.
 
 \item Capítulo 5: \textbf{Configuración experimental y resultados}: En este capítulo se describen los conjuntos de datos estudiados y la configuración para los distintos clasificadores empleados, así como los métodos propuestos y los métodos de referencia o de comparación. Se realiza una comparación de los resultados obtenidos con el estado del arte para la detección de depresión y anorexia.
 
-\item Capítulo 6: \textbf{Análisis y discusión}: Se discute el rendimiento del método de acuerdo a los diferentes parámetros, configuraciones y las dificultades encontradas.
+%\item Capítulo 6: \textbf{Análisis y discusión}: Se discute el rendimiento del método de acuerdo a los diferentes parámetros, configuraciones y las dificultades encontradas.
 
-\item Capítulo 7: \textbf{Conclusiones y trabajo futuro:} Por último se exponen las principales contribuciones de este trabajo y formas en que se puede mejorar.
+\item Capítulo 6: \textbf{Conclusiones y trabajo futuro:} Por último se exponen las principales contribuciones de este trabajo y formas en que se puede mejorar.
 
 \end{itemize}
 
