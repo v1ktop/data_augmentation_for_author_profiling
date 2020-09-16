@@ -5,12 +5,12 @@ truth_name=golden_truth.txt
 
 [depresion18_local]
 training= D:/corpus/DepresionEriskCollections/2017/train/
-test = D:/corpus/DepresionEriskCollections/2018/
-augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
-training_folder=prep_chunks_filtered
-training_file=golden_truth_filtered.txt
+test = D:/corpus/DepresionEriskCollections/2017/test/
+augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented_val/
+training_folder=prep_chunks_val
+training_file=golden_truth_val.txt
 test_folder=prep_chunks
-test_file=golden_truth.txt
+test_file=test_golden_truth.txt
 
 [anorexia18_local]
 training=D:/corpus/anorexia/2018/train/

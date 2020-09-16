@@ -58,28 +58,27 @@ class FeatureExtraction(object):
 
         if return_scores:
             res = dict(zip(self.cv.get_feature_names(), score))
+            values = pd.DataFrame.from_dict(data=res, orient='index')
+            values.rename(index=str, columns={0: 'score'}, inplace=True)
+            values['score'] = values['score'].round(6)
+
+            top_words = values.sort_values('score', ascending=False)
+
+            return top_words[0:k]
+
         else:
             res = dict(zip(self.cv.get_feature_names(), pval))
+            values = pd.DataFrame.from_dict(data=res, orient='index')
+            values.rename(index=str, columns={0: 'score'}, inplace=True)
+            values['score'] = values['score'].round(6)
 
-        values = pd.DataFrame.from_dict(data=res, orient='index')
-        values.rename(index=str, columns={0: 'score'}, inplace=True)
-        values['score'] = values['score'].round(6)
-
-        if return_scores:
-            top_words = values.sort_values('score', ascending=False)
-        else:
             top_words = values.sort_values('score', ascending=True)
 
-        if k == None:
-            if return_scores:
-                return top_words[top_words.score < p]
+            if k is None:
+               return top_words[top_words.score < p].index
             else:
-                return top_words[top_words.score < p].index
-        else:
-            if return_scores:
-                return top_words[0:k]
-            else:
-                return top_words[0:k].index
+               return top_words[0:k].index
+
 
     def get_domain_vocab(self, k):
         array_docs = self.X_vec.toarray()

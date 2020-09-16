@@ -14,29 +14,52 @@ from word_level_da.augmentation.select_candidates import select_docs
 GLOVE_DIR = "D:/Models/glove/glove.42B/glove.42B.300d.txt"
 
 
-def augment_by_docs_one_class(lan, output, glove_file, method="Over",
+def augment_by_docs_one_class(lan, output, glove_file, augmentation_method="Over",
                               replace="glove",
                               label_to_aug=None, labels=None, obj_label=1,
-                              n_docs=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dataset_key="erisk18_dev",
+                              n_docs=None, dataset_key="erisk18_dev",
                               load_emb=True, load_obj=False, preproces_vocab=False,
                               vocab_dir="D:/v1ktop/Drive/REPOS/augmentation_ap/obj/",
                               analogy_file="file",
                               filter=True,
-                              p_confidence=0.001, min_ocurrence=20, doc_len=64, p_aug=0.1
+                              p_confidence=0.001, min_ocurrence=20, doc_len=64, p_aug=0.1,
+                              save_words=False, curren_n=1
                               ):
+    if n_docs is None:
+        n_docs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     logger.info("Loading positive documents")
 
     data = Dataset(key=dataset_key, encode=False, remove_end=False, doc_len=doc_len,
                    min_len=int(doc_len / 2), chunking=True)
 
-    ##Get dataset in chunks
+    # Get dataset in chunks
     docs_train, truths_train, author_ids_train, (truths, lens) = data.get_dataset(partition="training",
-                                                                                  folder_name="prep_chunks",
+                                                                                  folder_name="prep_chunks_joined",
                                                                                   truth_name="golden_truth.txt",
                                                                                   )
 
-    selection = select_docs(docs_train, truths_train, author_ids_train)
-    selection.get_top_words(confidence=p_confidence)
+    # read augmented data
+
+    new_training = docs_train
+    new_labels = truths_train
+
+    for i in range(1, curren_n):
+        prefix = augmentation_method + str(curren_n - 1)
+        folder = augmentation_method + "/" + prefix
+        truth_file = augmentation_method + "/" + prefix + ".txt"
+        docs, l_docs, ids, useless_data = data.get_dataset(folder_name=folder, truth_name=truth_file,
+                                                           partition="augmented")
+
+        new_training = np.append(docs_train, docs)
+        new_labels = np.append(truths_train, l_docs)
+
+    selection = select_docs(docs_train, truths_train, author_ids_train, top_words_path=obj_dir,
+                            top_words_file="top_words_" + dataset_key)
+
+    new_words = selection.get_top_words(confidence=p_confidence, docs_training=new_training,
+                                        labels_training=new_labels, save_words=save_words)
+
+    logger.info("New words %s", new_words)
 
     if filter:
         cand_ids, cand_labels, cand_docs = selection.select_by_ocurrence(max_ocurrence=min_ocurrence,
@@ -52,9 +75,7 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
                            load_embedding=load_emb, load_obj=load_obj, obj_dir=vocab_dir,
                            voc_name=dataset_key, pos_file="pos_" + dataset_key, analogy_file=analogy_file)
 
-    if method == "Xi":
-        # logger.info("Computing Xi squared of the whole vocabulary")
-        # syn_augmented.build_vocab_xi2(docs_train, truths_train,k=top_features, idf=True)
+    if augmentation_method == "Xi":
         syn_augmented.word_list = selection.top_words
 
     logger.info("Top features: %s", selection.top_words)
@@ -71,11 +92,7 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
         logger.info("Vocabulary without stop words %d", syn_augmented.total_words)
         logger.info("Number of words with vectors %d", syn_augmented.words_with_vec)
 
-    # new_training=[]
-
     uniques_ids = defaultdict(list)
-
-    # One class only
 
     for c_id, c_label, c_doc in zip(cand_ids, cand_labels, cand_docs):
         uniques_ids[c_id].append(c_doc)
@@ -103,16 +120,18 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
             # print(n_docs)
             for doc in docs:
 
-                if method == "Rel_1" or method == "Rel_0":
+                if augmentation_method == "Rel_1" or augmentation_method == "Rel_0":
                     new_chunks, nrep = syn_augmented.augment_post(post=doc,
-                                                                  num_aug=num_aug, method=method, doc_index=i,
+                                                                  num_aug=num_aug, method=augmentation_method,
+                                                                  doc_index=i,
                                                                   from_class=current_label,
                                                                   to_class=label_to_aug[current_label], p_select=p_aug,
                                                                   )
 
                 else:
                     new_chunks, nrep = syn_augmented.augment_post(post=doc,
-                                                                  num_aug=num_aug, method=method, doc_index=i,
+                                                                  num_aug=num_aug, method=augmentation_method,
+                                                                  doc_index=i,
                                                                   from_class=None,
                                                                   to_class=None, p_select=p_aug)
 
@@ -131,9 +150,9 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
             if c % 10 == 0:
                 print('Augmented:' + str(c))
 
-        prefix = method + str(num_aug)
+        prefix = augmentation_method + str(curren_n)
 
-        complete_out_dir = os.path.join(output, method)
+        complete_out_dir = os.path.join(output, augmentation_method)
 
         if preproces_vocab:
             syn_augmented.save_files()
@@ -147,7 +166,7 @@ def augment_by_docs_one_class(lan, output, glove_file, method="Over",
 
         stats_words = syn_augmented.get_stats_words()
         stats_rep = syn_augmented.get_stats_words_rep()
-        data = [dataset_key, method, num_aug, stats_words["mean"], stats_rep["mean"]]
+        data = [dataset_key, augmentation_method, num_aug, stats_words["mean"], stats_rep["mean"]]
         logger.info(data)
 
 
@@ -162,25 +181,25 @@ if __name__ == "__main__":
     
     """
     obj_dir = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
-    method = "Rel_0"
-    dataset_key = "depresion19_local"
+    method = "Xi"
+    dataset_key = "depresion18_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
 
-    labels_dic = {"happiness": ["anxious", "frustrated", "unhappy", "despondent", "discouraged"]}
+    labels_dic = {"depressed": ["anxious", "frustrated", "unhappy", "despondent", "discouraged"]}
     labels = {0: "happiness", 1: "depressed"}
     # labels={0:"healthy", 1:"anorexic"}
     # labels_dic={"healthy":["bulimic", "underweight", "obese", "malnourished", "unhealthy"]}
 
-    output_dir = "D:/corpus/DepresionEriskCollections/2019/train/augmented"
+    output_dir = "D:/corpus/DepresionEriskCollections/2017/train/augmented_recalculated/"
     logger = utils.configure_root_logger(prefix_name=method + "_" + dataset_key)
     utils.set_working_directory()
 
     logger.info("Running data augmentation for the dataset: %s", dataset_key)
     logger.info("Method: %s", method)
-    logger.info("Labels: %s", labels_dic[labels[0]])
+    logger.info("Labels: %s", labels_dic[labels[1]])
 
-    p_select = 0.5
+    p_select = 0.2
 
     """
         replace:
@@ -188,12 +207,9 @@ if __name__ == "__main__":
                 glove: for Xi
                 analogy: for Context_1, Context_0
     """
-
-    augment_by_docs_one_class(lan=lang, output=output_dir, vocab_dir=obj_dir,
-                              glove_file=GLOVE_DIR,
-                              label_to_aug=labels_dic,
-                              obj_label=0,
-                              labels=labels, method=method, replace="relation",
-                              n_docs=[i for i in range(1, 11)], filter=True,
-                              dataset_key=dataset_key, load_emb=True, load_obj=True, preproces_vocab=True,
-                              analogy_file="r0_" + dataset_key, p_aug=p_select, min_ocurrence=15)
+    for i in range( 4,11):
+        augment_by_docs_one_class(lan=lang, output=output_dir, glove_file=GLOVE_DIR, augmentation_method=method,
+                              replace="glove", label_to_aug=labels_dic, labels=labels, obj_label=1,
+                              n_docs=[1], dataset_key=dataset_key, load_emb=False, load_obj=True,
+                              preproces_vocab=False, vocab_dir=obj_dir, analogy_file="r0_" + dataset_key, filter=True,
+                              min_ocurrence=20, p_aug=p_select, save_words=False, curren_n=i)

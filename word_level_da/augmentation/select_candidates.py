@@ -6,20 +6,31 @@ Created on Fri May 15 13:27:17 2020
 """
 
 from word_level_da.classifier.feature_extraction import FeatureExtraction
-
+from word_level_da.preprocessing.process_data import  ProcessData
 
 class select_docs(object):
 
-    def __init__(self, training, labels, ids):
+    def __init__(self, training, labels, ids, top_words_path, top_words_file):
         self.docs = training
         self.labels = labels
         self.ids = ids
-        self.top_words = dict()
+        self.top_words_dir = top_words_path
+        self.top_words_name = top_words_file
+        self.top_words = ProcessData.load_obj(top_words_path, top_words_file)
 
-    def get_top_words(self, confidence=0.001, k=None, stop=None, idf=True):
-        ft = FeatureExtraction(self.docs, stop_wors=stop, use_idf=idf)
-        top_words_selected = ft.get_chi_2(self.labels, k, p=confidence)
-        self.top_words = dict.fromkeys(top_words_selected, True)
+    def get_top_words(self, confidence=0.001, k=None, stop=None, idf=True, docs_training=[],
+                      labels_training=[], save_words=False):
+        ft = FeatureExtraction(docs_training, stop_wors=stop, use_idf=idf)
+        top_words_selected = ft.get_chi_2(labels_training, k, p=confidence)
+        new_words = dict.fromkeys(top_words_selected, True)
+        old_words = set(self.top_words.keys())
+        n_new = len(set(new_words.keys())-old_words)
+
+        if save_words:
+            ProcessData.save_obj(self.top_words_dir, self.top_words_name, new_words)
+            self.top_words = new_words
+
+        return n_new, new_words
 
     def select_by_ocurrence(self, max_ocurrence=2, obj_label=1):
         cand_ids = []

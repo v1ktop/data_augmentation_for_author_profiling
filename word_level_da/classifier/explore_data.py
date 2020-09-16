@@ -7,7 +7,9 @@ forked from: tensorflow text classification guides
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import multidict as multidict
 from collections import Counter
+from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -207,3 +209,24 @@ class explore_data(object):
         plt.xticks(idx, idx)
         plt.show()
         beingsaved.savefig(os.path.join(self.save_plot_dir, "class_dist" + self.format), format=self.format)
+
+    def get_frequency_dict_for_text(self, table):
+        fullTermsDict = multidict.MultiDict()
+        tmpDict = {}
+
+        # making dict for counting frequencies
+        for index, row in table.iterrows():
+            tmpDict[index] = int(row)
+
+        for key in tmpDict:
+            fullTermsDict.add(key, tmpDict[key])
+        return fullTermsDict
+
+    def generate_word_cloud(self, top_words, max_words):
+        wc = WordCloud(background_color="white", max_words=max_words, mask=None, max_font_size=150,
+                       width=1200, height=720)
+        wc.generate_from_frequencies(self.get_frequency_dict_for_text(top_words))
+        plt.imshow(wc, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        wc.to_file(os.path.join(self.save_plot_dir, "word_cloud" + self.format))
