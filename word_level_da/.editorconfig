@@ -7,8 +7,8 @@ truth_name=golden_truth.txt
 training= D:/corpus/DepresionEriskCollections/2017/train/
 test = D:/corpus/DepresionEriskCollections/2017/test/
 augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented_val/
-training_folder=prep_chunks_val
-training_file=golden_truth_val.txt
+training_folder=prep_chunks_val_filtered
+training_file=golden_truth_val_filtered.txt
 test_folder=prep_chunks
 test_file=test_golden_truth.txt
 
@@ -34,11 +34,11 @@ test_file=golden_truth.txt
 [depresion18_drive]
 training = /content/drive/My Drive/Data/depresion/2017/
 test = /content/drive/My Drive/Data/depresion/2018/
-augmented = /content/drive/My Drive/Data/depresion/2017/augmented/
-training_folder=prep_chunks_filtered
-training_file=golden_truth_filtered.txt
+augmented = /content/drive/My Drive/Data/depresion/2017/augmented_val/
+training_folder=prep_chunks_val_filtered
+training_file=golden_truth_val_filtered.txt
 test_folder=prep_chunks
-test_file=golden_truth.txt
+test_file=test_golden_truth.txt
 
 [depresion19_drive]
 training = /content/drive/My Drive/Data/depresion/2019/train/

@@ -151,7 +151,7 @@ class seq_model(object):
     def train_model(self, learning_rate=1e-4, epochs=20, batch_size=16, patience=3,
                     load_weights=False, weights_name=None, ad_data=([], []),
                     validation=True, monitor_measure="val_loss", method="Base", umbral=0.5,
-                    score_method="avg", q=.98):
+                    score_method="avg", q=.98, previous_weights_name=None):
 
 
         loss = self.get_loss_type(self.num_classes)
@@ -165,6 +165,7 @@ class seq_model(object):
         model_temp.summary()
 
         initial_weights = os.path.join(self.weights_path, weights_name)
+        previous_weights = os.path.join(self.weights_path, previous_weights_name)
 
         if validation:
             callbacks = [tf.keras.callbacks.EarlyStopping(monitor=monitor_measure, patience=patience),
@@ -172,8 +173,10 @@ class seq_model(object):
                                                             save_best_only=True, mode='auto')]
 
         if load_weights:
-            model_temp.load_weights(initial_weights)
+            model_temp.load_weights(previous_weights)
+            #model_temp.save(initial_weights)
 
+            #model_temp.load_weights(initial_weights)
         # Train and validate model.
 
         history = None

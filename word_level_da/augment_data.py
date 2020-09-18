@@ -34,8 +34,8 @@ def augment_by_docs_one_class(lan, output, glove_file, augmentation_method="Over
 
     # Get dataset in chunks
     docs_train, truths_train, author_ids_train, (truths, lens) = data.get_dataset(partition="training",
-                                                                                  folder_name="prep_chunks_joined",
-                                                                                  truth_name="golden_truth.txt",
+                                                                                  folder_name="prep_chunks_val",
+                                                                                  truth_name="golden_truth_val.txt",
                                                                                   )
 
     # read augmented data
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     # labels={0:"healthy", 1:"anorexic"}
     # labels_dic={"healthy":["bulimic", "underweight", "obese", "malnourished", "unhealthy"]}
 
-    output_dir = "D:/corpus/DepresionEriskCollections/2017/train/augmented_recalculated/"
+    output_dir = "D:/corpus/DepresionEriskCollections/2017/train/augmented_val/"
     logger = utils.configure_root_logger(prefix_name=method + "_" + dataset_key)
     utils.set_working_directory()
 
@@ -206,8 +206,14 @@ if __name__ == "__main__":
                 wordnet: for thesaurus method
                 glove: for Xi
                 analogy: for Context_1, Context_0
+                
+                save_words=True at first run (1,2)
+                False otherwise
+                n_docs= Number of augmented documents at this run
+                curren_n= current augmentation for incremental training
+                
     """
-    for i in range( 4,11):
+    for i in range(2,11):
         augment_by_docs_one_class(lan=lang, output=output_dir, glove_file=GLOVE_DIR, augmentation_method=method,
                               replace="glove", label_to_aug=labels_dic, labels=labels, obj_label=1,
                               n_docs=[1], dataset_key=dataset_key, load_emb=False, load_obj=True,
