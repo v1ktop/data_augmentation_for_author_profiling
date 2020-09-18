@@ -52,32 +52,22 @@ class FeatureExtraction(object):
         top_words = values.sort_values('score', ascending=False)
         return top_words[top_words.score > threshold].index
 
-    def get_chi_2(self, y_train, k=None, p=0.001, return_scores=False):
+    def get_chi_2(self, y_train, k=None, p=0.001):
 
         score, pval = chi2(self.X_vec, y_train)
+        res = dict(zip(self.cv.get_feature_names(), zip(score, pval)))
+        values = pd.DataFrame(res).T
 
-        if return_scores:
-            res = dict(zip(self.cv.get_feature_names(), score))
-            values = pd.DataFrame.from_dict(data=res, orient='index')
-            values.rename(index=str, columns={0: 'score'}, inplace=True)
-            values['score'] = values['score'].round(6)
+        values.rename(index=str, columns={0: 'score', 1:'pval'}, inplace=True)
+        values['score'] = values['score'].round(6)
+        values['pval'] = values['pval'].round(8)
 
+        if k is None:
             top_words = values.sort_values('score', ascending=False)
-
             return top_words[0:k]
-
         else:
-            res = dict(zip(self.cv.get_feature_names(), pval))
-            values = pd.DataFrame.from_dict(data=res, orient='index')
-            values.rename(index=str, columns={0: 'score'}, inplace=True)
-            values['score'] = values['score'].round(6)
-
-            top_words = values.sort_values('score', ascending=True)
-
-            if k is None:
-               return top_words[top_words.score < p].index
-            else:
-               return top_words[0:k].index
+            top_words = values.sort_values('pval', ascending=True)
+            return top_words[top_words.pval<p]
 
 
     def get_domain_vocab(self, k):
