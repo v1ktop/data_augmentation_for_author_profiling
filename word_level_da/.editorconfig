@@ -6,7 +6,7 @@ truth_name=golden_truth.txt
 [depresion18_local]
 training= D:/corpus/DepresionEriskCollections/2017/train/
 test = D:/corpus/DepresionEriskCollections/2017/test/
-augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented_val/
+augmented= D:/corpus/DepresionEriskCollections/2017/train/augmented/
 training_folder=prep_chunks_val_filtered
 training_file=golden_truth_val_filtered.txt
 test_folder=prep_chunks
