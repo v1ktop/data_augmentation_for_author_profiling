@@ -34,7 +34,7 @@ test_file=golden_truth.txt
 [depresion18_drive]
 training = /content/drive/My Drive/Data/depresion/2017/
 test = /content/drive/My Drive/Data/depresion/2018/
-augmented = /content/drive/My Drive/Data/depresion/2017/augmented_val/
+augmented = /content/drive/My Drive/Data/depresion/2017/augmented/
 training_folder=prep_chunks_val_filtered
 training_file=golden_truth_val_filtered.txt
 test_folder=prep_chunks
