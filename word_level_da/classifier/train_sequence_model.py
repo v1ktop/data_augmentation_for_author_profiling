@@ -76,8 +76,9 @@ class seq_model(object):
     def buil_model(self, data, layers=3, nodes=128, embedding_dim=300, dropout_rate=0.2,
                    TOP_K=10000, pretrained=True, embedding_trainable=False, bidirectional=True,
                    seq_len=64, emb_file=None, class_imbanlance=True, algo="cnn", kernel_size=None,
-                   vocab_dir=None, key=None, class_weights=None, bias=None
+                   vocab_dir=None, key=None, class_weights=None, bias=None, both_class_weights=False,
                    ):
+
 
         # Get the data.
         (train_texts, self.train_labels), (val_texts, self.val_labels) = data
@@ -101,7 +102,8 @@ class seq_model(object):
 
         if class_imbanlance and self.num_classes == 2:
             if class_weights == None:
-                self.class_weights = self.weight_for_class_bin(count_map[0], count_map[1])
+                self.class_weights = self.weight_for_class_bin(count_map[0], count_map[1],
+                                                               positive_class_only=both_class_weights)
             else:
                 self.class_weights = class_weights
 
@@ -143,8 +145,6 @@ class seq_model(object):
                                    text_len=seq_len
                                    )
 
-
-
         info = [len(word_index), TOP_K, n_emb, seq_len, self.class_weights, initial_bias]
         return info
 
@@ -152,7 +152,6 @@ class seq_model(object):
                     load_weights=False, weights_name=None, ad_data=([], []),
                     validation=True, monitor_measure="val_loss", method="Base", umbral=0.5,
                     score_method="avg", q=.98, previous_weights_name=None):
-
 
         loss = self.get_loss_type(self.num_classes)
 
@@ -174,9 +173,7 @@ class seq_model(object):
 
         if load_weights:
             model_temp.load_weights(previous_weights)
-            #model_temp.save(initial_weights)
 
-            #model_temp.load_weights(initial_weights)
         # Train and validate model.
 
         history = None
@@ -239,7 +236,7 @@ class seq_model(object):
 
         del model_temp
         gc.collect()
-        
+
         return score
 
     def get_loss_type(self, num_classes):
@@ -325,12 +322,19 @@ class seq_model(object):
                              'as training labels.'.format(
                 unexpected_labels=unexpected_labels))
 
-    def weight_for_class_bin(self, n_neg, n_pos, ):
+    def weight_for_class_bin(self, n_neg, n_pos, positive_class_only=True):
+        """
 
+        :param n_neg: number of negative instances
+        :param n_pos: the number of positive instances
+        :param positive_class_only: only calculates the weights until the weights for positive class has reached the
+        value of 1
+        :return:
+        """
         weight_for_0 = (1 / n_neg) * (n_pos + n_neg) / 2.0
         weight_for_1 = (1 / n_pos) * (n_pos + n_neg) / 2.0
 
-        if weight_for_0 > weight_for_1:
+        if weight_for_0 > weight_for_1 and positive_class_only:
             weight_for_0 = 1
             weight_for_1 = 1
 
