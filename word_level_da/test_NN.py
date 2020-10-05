@@ -9,7 +9,6 @@ Created on Sat Jun 15 16:09:47 2019
 
 This script test the model with: training - test, partitions
 
-SIGUE CNN
 
 """
 
@@ -27,28 +26,28 @@ import os
 
 warnings.filterwarnings("ignore")
 
-OBJ_DIR = "D:/weights_rnn/trainedfixed/"
+OBJ_DIR = "D:/weights_rnn/weighted/"
 VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
 FAST300 = "D:/Models/fasttex/cc.en.300.bin"
 tf.get_logger().setLevel('INFO')
 
 if __name__ == "__main__":
 
-    key = "depresion19_local"
+    key = "depresion18_local"
     glove_file = FAST300
     batch_size = 1024
     epochs = 20
     layers = 1
-    nodes = 300
+    nodes = 256
     dim = 300
     label_pos = 1
     len_doc = 64
     kernel = 1
     max_features = 150000
-    patience = 6
+    patience = 3
     drop = 0.2
     lr = 1e-3
-    model = "cnn"
+    model = "rnn-fixed"
     AUGMENTED = True
 
     logger = utils.configure_root_logger(prefix_name=key + "_")
@@ -80,8 +79,8 @@ if __name__ == "__main__":
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
     methods = ["Rel_0"]
-    n_docs = [i for i in range(1,11)]
-    umbral = 0.4
+    n_docs = [i for i in range(1,6)]
+    umbral = 0.5
     q = 75
     score_method = "avg"
     for augmentation_method in methods:
@@ -113,7 +112,7 @@ if __name__ == "__main__":
                                            ad_data=(test[3]),
                                            validation=True, monitor_measure="val_loss",
                                            method=augmentation_method + str(i),
-                                           umbral=umbral, score_method=score_method, q=q)
+                                           umbral=umbral, score_method=score_method, q=q, previous_weights_name=key.split("_")[0] + prefix + model + str(i) + ".h5")
 
                 info_s = [augmentation_method, n, i]
                 info_s += info

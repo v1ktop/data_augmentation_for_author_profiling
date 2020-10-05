@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 23 14:14:22 2019
+This class implements a series of methods to evaluate the performance of the classifiers.
+It was written to evaluate a binary classification problem.
 
 @author: v1kto
+
 """
 import numpy as np
 from sklearn.metrics import accuracy_score
@@ -73,9 +76,16 @@ class Score(object):
         # Encoder = LabelEncoder()
         self.y_truth = truths
 
-    def f1(self):
-        F1 = precision_recall_fscore_support(self.y_truth, self.y_pred, average='binary')
+    def f1(self, mode="binary"):
+        """
+
+        :param mode: default "binary", the type of averaging performing in the data.
+            valid options are: micro, macro, etc.
+        :return:
+        """
+        F1 = precision_recall_fscore_support(self.y_truth, self.y_pred, average=mode)
         return F1
 
     def accuracy(self):
         return accuracy_score(self.y_truth, self.y_pred)
+

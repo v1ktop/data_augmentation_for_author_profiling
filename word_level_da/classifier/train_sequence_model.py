@@ -209,6 +209,7 @@ class seq_model(object):
                 sc.max_pred(truths, lens, umbral, q)
         acc = sc.accuracy()
         f1 = sc.f1()
+        f1_macro = sc.f1(mode="macro")
 
         ###SAVE PREDICT
         if len(self.all_predictions.index) > 0:
@@ -227,12 +228,12 @@ class seq_model(object):
             new_history = np.append(new_history, h_val_loss)
             new_history = np.append(new_history, h_val_acc)
 
-            score = [acc, f1[0], f1[1], f1[2], np.min(history["loss"]),
+            score = [acc, f1[0], f1[1], f1[2], f1_macro[0], f1_macro[1], f1_macro[2], np.min(history["loss"]),
                      np.max(history["acc"]), np.min(history["val_loss"]),
                      np.max(history["val_acc"])]
             score = np.append(score, new_history)
         else:
-            score = [acc, f1[0], f1[1], f1[2]]
+            score = [acc, f1[0], f1[1], f1[2], f1_macro[0], f1_macro[1], f1_macro[2]]
 
         del model_temp
         gc.collect()
