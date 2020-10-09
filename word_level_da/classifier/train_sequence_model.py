@@ -39,6 +39,7 @@ class seq_model(object):
         self.x_val = None
         self.train_labels = None
         self.val_labels = None
+        self.vocab = None
         self.load_all_vectors = load_all_vectors
 
         self.all_predictions = pd.DataFrame(original_labels, index=ids_labels, columns=["truth"])
@@ -73,12 +74,39 @@ class seq_model(object):
         # Not sure of the effectiveness of this, but it is recommended by Keras documentation.
         rn.seed(1234)
 
-    def buil_model(self, data, layers=3, nodes=128, embedding_dim=300, dropout_rate=0.2,
-                   TOP_K=10000, pretrained=True, embedding_trainable=False, bidirectional=True,
-                   seq_len=64, emb_file=None, class_imbanlance=True, algo="cnn", kernel_size=None,
-                   vocab_dir=None, key=None, class_weights=None, bias=None, both_class_weights=False,
-                   ):
+    def build_model(self, data, layers=3, nodes=128, embedding_dim=300, dropout_rate=0.2,
+                    vocabulary_size=10000, pretrained=True, embedding_trainable=False, bidirectional=True,
+                    seq_len=64, emb_file=None, class_imbalance=True, algo="cnn", kernel_size=None,
+                    vocab_dir=None, key=None, class_weights=None, initial_bias=None,
+                    ):
+        """
 
+        :param data: a double tuple of arrays like numpy or lists, first tuple (train, labels), second (test,labels)
+        :param layers: the number of layers
+        :param nodes: the number of nodes, filters in the case of CNN
+        :param embedding_dim: the dimension of the pre-trained embedding
+        :param dropout_rate: dropout a real number [0,1]
+        :param vocabulary_size: the desired size of the vocabulary
+        :param pretrained: set to True if you are using pre-trained embeddings
+        :param embedding_trainable: If the embedding layer has to be trained
+        :param bidirectional: True if the LSTM is bidirectional
+        :param seq_len: max length of the sentences
+        :param emb_file: The file where you want to save the currents embeddings for futher experiments
+        :param class_imbalance: True is the network must be trained to be sensitive to imbalance data
+        :param algo: cnn Convolutional Network; rnn-fixed: LSTM network
+        :param kernel_size: The kernel size fo CNN
+        :param vocab_dir: the place where to save the embeddings vocabulary
+        :param key: the unique key of the dataset
+        :param class_weights: Auto if the weights must be calculated based on the number of samples.
+        :param initial_bias:Auto if the bias must be calculated based on the number of samples.
+        :return: info, Information about the current model.
+                Number of words extracted,
+                Max number of words for training
+                Number of new embeddings found
+                Max sequence length
+                Class weights
+                Initial bias
+        """
 
         # Get the data.
         (train_texts, self.train_labels), (val_texts, self.val_labels) = data
@@ -87,32 +115,26 @@ class seq_model(object):
         self.num_classes = len(count_map)
         self.verify_labels(self.val_labels, self.num_classes)
 
-        # Vectorize texts.
-        vec = vectorize(features=TOP_K, doc_len=seq_len)
+        # Vectorized texts.
+        vec = vectorize(features=vocabulary_size, doc_len=seq_len)
         self.x_train, self.x_val, word_index = vec.sequence_vectorize(train_texts, val_texts)
 
-        num_features = min(len(word_index) + 1, TOP_K)
+        num_features = min(len(word_index) + 1, vocabulary_size)
 
         we_name = "WE_" + key
         self.vocab = ProcessData.load_obj(vocab_dir, we_name)
         weights, n_emb = self.load_embeddigs_fast(emb_file, word_index, num_features, embedding_dim)
-        # weights, n_emb=self.load_embeddigs(emb_file, word_index, num_features, embedding_dim)
 
         ProcessData.save_obj(vocab_dir, we_name, self.vocab)
 
-        if class_imbanlance and self.num_classes == 2:
-            if class_weights == None:
-                self.class_weights = self.weight_for_class_bin(count_map[0], count_map[1],
-                                                               positive_class_only=both_class_weights)
+        if class_imbalance and self.num_classes == 2:
+            if class_weights is "Auto":
+                self.class_weights = self.weight_for_class_bin(count_map[0], count_map[1])
             else:
                 self.class_weights = class_weights
 
-            if bias == None:
+            if initial_bias is "Auto":
                 initial_bias = math.log(count_map[0] / count_map[1])
-            else:
-                initial_bias = bias
-        else:
-            initial_bias = None
 
         if algo == "rnn-fixed":
             self.model = rnn_model_fixed(layers=layers,
@@ -145,7 +167,7 @@ class seq_model(object):
                                    text_len=seq_len
                                    )
 
-        info = [len(word_index), TOP_K, n_emb, seq_len, self.class_weights, initial_bias]
+        info = [len(word_index), vocabulary_size, n_emb, seq_len, self.class_weights, initial_bias]
         return info
 
     def train_model(self, learning_rate=1e-4, epochs=20, batch_size=16, patience=3,
@@ -157,7 +179,7 @@ class seq_model(object):
 
         # print("Loss Type: ", loss)
         optimizer = tf.keras.optimizers.Adam(lr=learning_rate)
-
+        callbacks = []
         model_temp = tf.keras.models.clone_model(self.model)
 
         model_temp.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
@@ -211,7 +233,7 @@ class seq_model(object):
         f1 = sc.f1()
         f1_macro = sc.f1(mode="macro")
 
-        ###SAVE PREDICT
+        # SAVE PREDICT
         if len(self.all_predictions.index) > 0:
             self.all_predictions[method + "_prob"] = sc.probabilities
             self.all_predictions[method + "_pred"] = sc.y_pred
@@ -275,7 +297,7 @@ class seq_model(object):
 
     def load_embeddigs_glove(self, glove_file, word_index, features=20000, dim=50):
         embeddings_index = {}
-
+        coefs = np.zeros(300)
         f = open(glove_file, encoding="utf8")
 
         for line in f:
@@ -283,7 +305,7 @@ class seq_model(object):
             word = values[0]
             try:
                 coefs = np.asarray(values[1:], dtype='float32')
-            except:
+            except IndexError:
                 pass
             embeddings_index[word] = coefs
         f.close()
@@ -305,7 +327,8 @@ class seq_model(object):
                 if len(embedding_matrix[i]) != len(embedding_vector):
                     print("could not broadcast input array from shape", str(len(embedding_matrix[i])),
                           "into shape", str(len(embedding_vector)), " Please make sure your"
-                                                                    " EMBEDDING_DIM is equal to embedding_vector file ,GloVe,")
+                                                                    " EMBEDDING_DIM is equal to embedding_vector file "
+                                                                    ",GloVe,")
                     exit(1)
                 embedding_matrix[i] = embedding_vector
                 n_words_in += 1
@@ -315,7 +338,7 @@ class seq_model(object):
 
     def verify_labels(self, val_labels, num_classes):
         # Verify that validation labels are in the same range as training labels.
-        unexpected_labels = [v for v in val_labels if v not in range(self.num_classes)]
+        unexpected_labels = [v for v in val_labels if v not in range(num_classes)]
         if len(unexpected_labels):
             raise ValueError('Unexpected label values found in the validation set:'
                              ' {unexpected_labels}. Please make sure that the '
@@ -323,21 +346,15 @@ class seq_model(object):
                              'as training labels.'.format(
                 unexpected_labels=unexpected_labels))
 
-    def weight_for_class_bin(self, n_neg, n_pos, positive_class_only=True):
+    def weight_for_class_bin(self, n_neg, n_pos):
         """
 
         :param n_neg: number of negative instances
         :param n_pos: the number of positive instances
-        :param positive_class_only: only calculates the weights until the weights for positive class has reached the
-        value of 1
         :return:
         """
         weight_for_0 = (1 / n_neg) * (n_pos + n_neg) / 2.0
         weight_for_1 = (1 / n_pos) * (n_pos + n_neg) / 2.0
-
-        if weight_for_0 > weight_for_1 and positive_class_only:
-            weight_for_0 = 1
-            weight_for_1 = 1
 
         return {0: weight_for_0, 1: weight_for_1}
 

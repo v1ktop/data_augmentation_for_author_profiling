@@ -3,9 +3,6 @@
 Created on Sat Jun 15 16:09:47 2019
 
 @author: v1kto
-Created on Sat Jun 15 16:09:47 2019
-
-@author: v1kto
 
 This script test the model with: training - test, partitions
 
@@ -26,7 +23,7 @@ import os
 
 warnings.filterwarnings("ignore")
 
-OBJ_DIR = "D:/weights_rnn/weighted/"
+OBJ_DIR = "D:/weights_rnn/unweighted/"
 VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
 FAST300 = "D:/Models/fasttex/cc.en.300.bin"
 tf.get_logger().setLevel('INFO')
@@ -78,8 +75,8 @@ if __name__ == "__main__":
     bi_gru = seq_model(weights_path=OBJ_DIR, static=False, load_all_vectors=False,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
-    methods = ["Rel_0"]
-    n_docs = [i for i in range(1,6)]
+    methods = ["Xi"]
+    n_docs = [i for i in range(1,11)]
     umbral = 0.5
     q = 75
     score_method = "avg"
@@ -99,11 +96,11 @@ if __name__ == "__main__":
                 new_training = training[0]
                 new_labels = training[1]
 
-            info = bi_gru.buil_model(((new_training, new_labels), (test[0], test[1])), layers, nodes, dim, drop,
-                                     max_features, kernel_size=[3,4,5],
-                                     pretrained=True, embedding_trainable=False, bidirectional=True,
-                                     seq_len=len_doc, emb_file=glove_file, class_imbanlance=True, algo=model,
-                                     vocab_dir=VOCAB_DIR, key=key.split("_")[0])
+            info = bi_gru.build_model(((new_training, new_labels), (test[0], test[1])), layers, nodes, dim, drop,
+                                      max_features, kernel_size=[3,4,5],
+                                      pretrained=True, embedding_trainable=False, bidirectional=True,
+                                      seq_len=len_doc, emb_file=glove_file, class_imbalance=False, algo=model,
+                                      vocab_dir=VOCAB_DIR, key=key.split("_")[0], class_weights=None, initial_bias="Auto")
 
             info[2] = umbral
             for i in range(3):
