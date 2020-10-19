@@ -24,10 +24,9 @@ from word_level_da.preprocessing.process_data import ProcessData
 
 class seq_model(object):
 
-    def __init__(self, weights_path=None, static=True, load_all_vectors=True, ids_labels=[], original_labels=[]):
+    def __init__(self, weights_path=None, iteration=0, load_all_vectors=True, ids_labels=[], original_labels=[]):
 
-        if static:
-            self.static_hyp()
+        #self.static_hyp(iteration)
 
         os.makedirs(weights_path, exist_ok=True)
 
@@ -44,7 +43,7 @@ class seq_model(object):
 
         self.all_predictions = pd.DataFrame(original_labels, index=ids_labels, columns=["truth"])
 
-    def static_hyp(self):
+    def static_hyp(self, iter):
         """Ensure reproducible results
         Ensure the reproducibility of the experiments by seeding the pseudo-random number generators and some other
         TensorFlow and Keras session configurations.
@@ -60,19 +59,18 @@ class seq_model(object):
             seed1: 42 123 1234
             seed2: 41 122 1233
             seed3: 40 121 1230
-            seed4: 39 120 1241
             
         """
 
         # Set the random seed for NumPy. Keras gets its source of randomness from NumPy.
         np.random.seed(42)
         # Set the random seed for the TensorFlow backend.
-        tf.random.set_seed(123)
+        tf.random.set_seed(123+iter)
         # tf.set_random_seed(123)
 
         # Set the random seed for the core Python random number generator.
         # Not sure of the effectiveness of this, but it is recommended by Keras documentation.
-        rn.seed(1234)
+        rn.seed(123)
 
     def build_model(self, data, layers=3, nodes=128, embedding_dim=300, dropout_rate=0.2,
                     vocabulary_size=10000, pretrained=True, embedding_trainable=False, bidirectional=True,
@@ -167,13 +165,13 @@ class seq_model(object):
                                    text_len=seq_len
                                    )
 
-        info = [len(word_index), vocabulary_size, n_emb, seq_len, self.class_weights, initial_bias]
+        info = [len(word_index), self.x_train.shape[0], n_emb, seq_len, self.class_weights, initial_bias]
         return info
 
     def train_model(self, learning_rate=1e-4, epochs=20, batch_size=16, patience=3,
                     load_weights=False, weights_name=None, ad_data=([], []),
                     validation=True, monitor_measure="val_loss", method="Base", umbral=0.5,
-                    score_method="avg", q=.98, previous_weights_name=None):
+                    score_method="avg", q=.98):
 
         loss = self.get_loss_type(self.num_classes)
 
@@ -186,7 +184,6 @@ class seq_model(object):
         model_temp.summary()
 
         initial_weights = os.path.join(self.weights_path, weights_name)
-        previous_weights = os.path.join(self.weights_path, previous_weights_name)
 
         if validation:
             callbacks = [tf.keras.callbacks.EarlyStopping(monitor=monitor_measure, patience=patience),
@@ -194,7 +191,7 @@ class seq_model(object):
                                                             save_best_only=True, mode='auto')]
 
         if load_weights:
-            model_temp.load_weights(previous_weights)
+            model_temp.load_weights(weights_name)
 
         # Train and validate model.
 

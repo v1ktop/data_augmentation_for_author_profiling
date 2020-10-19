@@ -81,8 +81,8 @@ class SynRep(object):
                      doc_index=0, p_select=0.5, p_replace=0.5,
                      from_class=None, to_class=None):
 
-        original_tokens = word_tokenize(post)
-
+        #original_tokens = word_tokenize(post)
+        original_tokens = post.split(" ")
         num_words = len(original_tokens)
         self.words_by_doc[doc_index] += num_words
         a_words = []
@@ -123,8 +123,6 @@ class SynRep(object):
             while real_replaced < n_sr[new_s]:
                 random_index = random.randint(0, num_words - 1)
                 random_word = words[random_index]
-                synonyms = []
-
                 synonyms = self.get_synonyms(random_word)
 
                 num_syn = len(synonyms)

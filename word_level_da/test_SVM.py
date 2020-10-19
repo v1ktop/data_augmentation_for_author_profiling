@@ -11,14 +11,14 @@ if __name__ == "__main__":
 
     # Parameters
     # key="erisk18_test"
-    key = "depresion19_local"
+    key = "depresion18_local"
     count = "tf-idf"
     feature = 'word'
     len_doc = 64
 
-    methods = ["Over", "Thesaurus", "Xi", "Rel_1", "Rel_0", "Context_1"]
+    methods = ["Xi"]
     stop_w = None
-    idf = False
+    idf = True
     score_method = "avg"
 
     logger = utils.configure_root_logger(prefix_name=key + "_" + methods[0])

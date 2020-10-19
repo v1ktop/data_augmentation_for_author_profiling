@@ -22,7 +22,7 @@ class select_docs(object):
                       labels_training=[], save_words=False):
         ft = FeatureExtraction(docs_training, stop_wors=stop, use_idf=idf)
         top_words_selected = ft.get_chi_2(labels_training, k, p=confidence)
-        new_words = dict.fromkeys(top_words_selected, True)
+        new_words = dict.fromkeys(top_words_selected.index, True)
         old_words = set(self.top_words.keys())
         n_new = len(set(new_words.keys())-old_words)
 
