@@ -219,4 +219,6 @@ if __name__ == "__main__":
                               replace="glove", label_to_aug=labels_dic, labels=labels, obj_label=1,
                               n_docs=[i for i in range(1, 11)], dataset_key=dataset_key, load_emb=False, load_obj=True,
                               preproces_vocab=False, vocab_dir=obj_dir, analogy_file="r0_" + dataset_key, filter=False,
-                              min_ocurrence=20, p_aug=p_select, save_words=True, curren_n=1)
+                              min_ocurrence=15, p_aug=p_select, save_words=True, curren_n=1,
+                              label_file= "train_golden_truth_joined.txt",
+                              folder="prep_chunks_joined")

@@ -81,8 +81,7 @@ class SynRep(object):
                      doc_index=0, p_select=0.5, p_replace=0.5,
                      from_class=None, to_class=None):
 
-        #original_tokens = word_tokenize(post)
-        original_tokens = post.split(" ")
+        original_tokens = word_tokenize(post)
         num_words = len(original_tokens)
         self.words_by_doc[doc_index] += num_words
         a_words = []
