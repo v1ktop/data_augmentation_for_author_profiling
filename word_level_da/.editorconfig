@@ -15,15 +15,15 @@ test_file=golden_truth.txt
 [anorexia18_local]
 training=D:/corpus/anorexia/2018/train/
 test =D:/corpus/anorexia/2019/
-augmented = D:/corpus/anorexia/2018/train/augmented/
+augmented = D:/corpus/anorexia/2018/train/augmented-xi-filter/
 training_folder=prep_chunks_filtered
 training_file=train_golden_truth_filtered.txt
 test_folder=prep_chunks
 test_file=test_golden_truth.txt
 
 [depresion19_local]
-training = D:/corpus/DepresionEriskCollections/2019/train/
-test = D:/corpus/DepresionEriskCollections/2019/test/
+training =D:/corpus/DepresionEriskCollections/2019/train/
+test =D:/corpus/DepresionEriskCollections/2019/test/
 augmented=D:/corpus/DepresionEriskCollections/2019/train/augmented/
 training_folder=prep_chunks_filtered_neg_only
 training_file=golden_truth_filtered.txt

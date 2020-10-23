@@ -41,10 +41,9 @@ if __name__ == "__main__":
     len_doc = 64
     kernel = 1
     max_features = 150000
-    patience = 3
+    patience = 6
     drop = 0.2
     lr = 1e-3
-    iteration = 5
     model = "cnn"
     AUGMENTED = True
 
@@ -73,10 +72,10 @@ if __name__ == "__main__":
     logger.info("Number of documents in training set: %s", len(training[0]))
     logger.info("Number of documents in test set: %s", len(test[0]))
 
-    bi_gru = seq_model(weights_path=OBJ_DIR, iteration=iteration, load_all_vectors=False,
+    bi_gru = seq_model(weights_path=OBJ_DIR, iteration=1, load_all_vectors=False,
                        ids_labels=dict.fromkeys(test[2]).keys(), original_labels=test[3][0])
 
-    methods = ["Xi"]
+    methods = ["Rel_1"]
     n_docs = [i for i in range(1,11)]
     umbral = 0.4
     q = 75
@@ -107,17 +106,18 @@ if __name__ == "__main__":
             #logger.info("Vocabulary size: %d", info[0])
             info[2] = umbral
 
-            score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False,
-                                           weights_name=key.split("_")[0] + prefix + model + str(iteration) + ".h5",
-                                           ad_data=(test[3]),
-                                           validation=True, monitor_measure="val_loss",
-                                           method=augmentation_method + str(iteration),
-                                           umbral=umbral, score_method=score_method, q=q)
+            for iteration in range(3):
+                score = bi_gru.train_model(lr, epochs, batch_size, patience, load_weights=False,
+                                               weights_name=key.split("_")[0] + prefix + model + str(iteration) + ".h5",
+                                               ad_data=(test[3]),
+                                               validation=True, monitor_measure="val_loss",
+                                               method=augmentation_method + str(iteration),
+                                               umbral=umbral, score_method=score_method, q=q)
 
-            info_s = [augmentation_method, n, iteration]
-            info_s += info
-            info_s += list(score)
-            logger.info(info_s)
+                info_s = [augmentation_method, n, iteration]
+                info_s += info
+                info_s += list(score)
+                logger.info(info_s)
 
     bi_gru.save_predictions(VOCAB_DIR, "predictions_" + key + model)
     logger.info("Finish Time: %s", datetime.now())

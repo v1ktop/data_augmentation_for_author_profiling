@@ -183,7 +183,7 @@ if __name__ == "__main__":
     """
     obj_dir = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\word_level_da\obj"
     method = "Xi"
-    dataset_key = "anorexia18_local"
+    dataset_key ="depresion19_local"
     # dataset_key="anorexia18_dev"
     lang = 'en'
 
@@ -192,8 +192,9 @@ if __name__ == "__main__":
     # labels={0:"healthy", 1:"anorexic"}
     # labels_dic={"healthy":["bulimic", "underweight", "obese", "malnourished", "unhealthy"]}
 
-    output_dir = "D:/corpus/DepresionEriskCollections/2019/train/augmented-xi/"
+    #output_dir = "D:/corpus/anorexia/2018/train/augmented-xi-filter/"
     #output_dir = "D:/corpus/DepresionEriskCollections/2017/train/augmented/"
+    output_dir = "D:/corpus/DepresionEriskCollections/2019/train/augmented-xi/"
     logger = utils.configure_root_logger(prefix_name=method + "_" + dataset_key)
     utils.set_working_directory()
 
@@ -219,6 +220,6 @@ if __name__ == "__main__":
                               replace="glove", label_to_aug=labels_dic, labels=labels, obj_label=1,
                               n_docs=[i for i in range(1, 11)], dataset_key=dataset_key, load_emb=False, load_obj=True,
                               preproces_vocab=False, vocab_dir=obj_dir, analogy_file="r0_" + dataset_key, filter=False,
-                              min_ocurrence=15, p_aug=p_select, save_words=True, curren_n=1,
-                              label_file= "train_golden_truth_joined.txt",
-                              folder="prep_chunks_joined")
+                              min_ocurrence=20, p_aug=p_select, save_words=True, curren_n=1,
+                              label_file= "golden_truth.txt",
+                              folder="prep_chunks/")

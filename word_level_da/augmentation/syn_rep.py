@@ -247,22 +247,25 @@ class SynRep(object):
             self.POS_OF_WORD[word] = [ss.pos() for ss in wordnet.synsets(word)]
         return self.POS_OF_WORD[word]
 
-    def word_list_translation(self, word, to_class):
 
-        key = to_class
+    def word_list_translation(self, word, from_class, to_class):
+
+        key = from_class+ '-' +to_class
         if key not in self.WORD_TOPIC_TRANSLATION:
             self.WORD_TOPIC_TRANSLATION[key] = dict()
         if word not in self.WORD_TOPIC_TRANSLATION[key]:
             try:
                 # get vector a , them rest vector b
-                label_vector = self.model.get_vector(to_class)
-                word_vector = self.model.get_vector(word)
-                result_vector = word_vector - label_vector
+                #label_vector = self.model.get_vector(to_class)
+                #word_vector = self.model.get_vector(word)
+                #result_vector = word_vector - label_vector
                 self.WORD_TOPIC_TRANSLATION[key][word] = [x[0] for x in
-                                                          self.model.similar_by_vector(result_vector, 20)]
+                                                          self.model.most_similar_cosmul(positive=[word, to_class], negative=[from_class], topn=20)]
                 self.words_with_vec += 1
             except KeyError:
                 self.WORD_TOPIC_TRANSLATION[key][word] = [(word, 0)]
+
+
 
     def get_synonyms(self, word, key=None):
         synonyms = []
@@ -327,7 +330,7 @@ class SynRep(object):
 
         self.word_list = extractor.get_chi_2(truths_train, k=k)
 
-    def build_all_vocab(self, docs_train, to_class=None):
+    def build_all_vocab(self, docs_train, from_class=None, to_class=None):
         extractor = FeatureExtraction(docs_train=docs_train, method="count")
         vocab = extractor.cv.vocabulary_
         word_list = []
@@ -340,7 +343,7 @@ class SynRep(object):
                 self.get_close_vector(w)
             if self.replace == "relation":
                 for key in to_class:
-                    self.word_list_translation(w, key)
+                    self.word_list_translation(w, from_class, key)
 
             if i % 500 == 0:
                 print("Processed", i + 1)

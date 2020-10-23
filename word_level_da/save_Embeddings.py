@@ -20,7 +20,7 @@ VOCAB_DIR = r"D:\v1ktop\Drive-INAOE\Code\data_aumentation_for_author_profiling\w
 
 if __name__ == "__main__":
 
-    key = "depresion18_local"
+    key = "depresion19_local"
     glove_file = FAST300
     batch_size = 64
     len_doc = 64
@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     methods = ["Xi"]
 
-    n_docs = [i for i in range(6, 11)]
+    n_docs = [i for i in range(4, 11)]
 
     we_name = "WE_" + key.split("_")[0]
     ft = fasttext.load_model(FAST300)
