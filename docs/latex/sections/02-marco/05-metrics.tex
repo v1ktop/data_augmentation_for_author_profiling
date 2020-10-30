@@ -1,6 +1,6 @@
 \section{Medidas de Evaluación}
 
-Existen diferentes métricas para evaluar los modelos de aprendizaje computacional, dependiendo de lo que se quiera medir algunas de las más utilizadas son: exactitud, precisión, recuerdo y F1. Para ilustrar cada un de estas métricas, se parte de la clasificación binaria como ejemplo. La tabla \ref{table:confusion}, conocida como matriz de confusión, resume  los resultados de un clasificador. A continuación se describen los principales conceptos\footnote{Tomados de https://medium.com/analytics-vidhya/complete-guide-to-machine-learning-evaluation-metrics-615c2864d916}.
+Existen diferentes métricas para evaluar los modelos de aprendizaje computacional, dependiendo de lo que se quiera medir algunas de las más utilizadas son: exactitud, precisión, recuerdo y F1. Para ilustrar cada una de estas métricas, se parte de la clasificación binaria como ejemplo. La tabla \ref{table:confusion}, conocida como matriz de confusión, resume los resultados de un clasificador. A continuación, se describen los principales conceptos\footnote{Tomados de https://medium.com/analytics-vidhya/complete-guide-to-machine-learning-evaluation-metrics-615c2864d916}.
 
 \begin{table}[ht]
 \caption{Matriz de confusión.}
@@ -10,8 +10,8 @@ Existen diferentes métricas para evaluar los modelos de aprendizaje computacion
 \begin{tabular}{l|c|c|}
 \cline{2-3}
                                          & \multicolumn{1}{l|}{\textbf{Predicción: 1}} & \multicolumn{1}{l|}{\textbf{Predicción: 0}} \\ \hline
-\multicolumn{1}{|l|}{\textbf{Actual: 1}} & \textit{VP}                                 & \textit{FN}                                 \\ \hline
-\multicolumn{1}{|l|}{\textbf{Actual: 0}} & \textit{FP}                                 & \textit{VN}                                 \\ \hline
+\multicolumn{1}{|l|}{\textbf{Real: 1}} & \textit{VP}                                 & \textit{FN}                                 \\ \hline
+\multicolumn{1}{|l|}{\textbf{Real: 0}} & \textit{FP}                                 & \textit{VN}                                 \\ \hline
 \end{tabular}
 \end{small}
 \end{table}
@@ -19,18 +19,17 @@ Existen diferentes métricas para evaluar los modelos de aprendizaje computacion
 
 La matriz de confusión no es una medida como tal, pero las métricas de evaluación están basados en los números dentro de esta.
 
-\textbf{Términos asociados a la matriz de confusión:}
+
+%\textbf{Términos asociados a la matriz de confusión:}
 
 \begin{enumerate}
-    \item \textbf{Verdaderos Positivos (VP)}: Es el número total de predicciones en que la clase actual es 1 (positiva) y la predicción también es 1 (positiva).
-    \item \textbf{Verdaderos Negativos (VN)}: Es el número total de predicciones en que la clase actual es 0 (negativa) y la predicción también es 0 (negativa).
+    \item \textbf{Verdaderos Positivos (VP)}: Es el número total de predicciones en que la clase real es 1 (positiva) y la predicción también es 1 (positiva).
+    \item \textbf{Verdaderos Negativos (VN)}: Es el número total de predicciones en que la clase real es 0 (negativa) y la predicción también es 0 (negativa).
     \item \textbf{Falsos Positivos (FP)}: El número de predicciones en que la clase verdadera es 0 y la predicción es 1:
     \item \textbf{Falsos Negativos (FN)}: Es el número de predicciones en que la clase verdadera es 1 y la predicción es 0.
 \end{enumerate}
 
 El escenario ideal sería que el modelo obtenga $0$ falsos positivos y falsos negativos, pero ese no es el caso en la vida real y el objetivo en ocasiones es tratar de minimizar los falsos positivos o los falsos negativos.
-
-%Ilustración por tabla o notacion de conjuntos
 
 \textbf{Exactitud}: La proporción del número de ejemplos en el conjunto de evaluación que son correctamente clasificados por el modelo. La exactitud es utilizada cuando las clases tienen la misma importancia para la clasificación.
 
@@ -41,13 +40,13 @@ Exactitud = \frac{VP + VN}{VP + VN+ FN+FP}
 \textbf{Precisión}: Es la proporción del número de instancias positivas predichas correctamente.
 
 \begin{equation} \label{eq:precc}
-Precision = \frac{VP}{VP+FP}    
+\text{Precisión} = \frac{VP}{VP+FP}    
 \end{equation}
 
 \textbf{Recuerdo}: Representa la proporción de las instancias positivas que lograron ser recuperadas.
 
 \begin{equation} \label{eq:recc}
-Precision = \frac {VP}{VP+FN}    
+\text{Precisión} = \frac {VP}{VP+FN}    
 \end{equation}
 
 \textbf{Medida F1}: Es el promedio armónico de precisión y recuerdo. Proporciona una puntuación más realista al considerar a la precisión y el recuerdo.

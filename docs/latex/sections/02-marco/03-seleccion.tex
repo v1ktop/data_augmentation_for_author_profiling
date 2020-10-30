@@ -1,13 +1,13 @@
 \section{Selección de características}
 
-Un problema común en la clasificación de textos es el manejo de grandes espacios vectoriales (cientos de miles dependiendo de la extracción utilizada) y como consecuencia se necesita grandes cantidades de memoria y tiempo de computación para poder procesar los algoritmos de aprendizaje. Una solución efectiva consiste en seleccionar las características que mejor discriminan a las clases.
+Un problema común en la clasificación de textos, es el manejo de grandes espacios vectoriales (cientos de miles dependiendo de la extracción utilizada) y como consecuencia se necesitan grandes cantidades de memoria y tiempo de computación para poder procesar los algoritmos de aprendizaje. Una solución efectiva consiste en seleccionar las características que mejor discriminan a las clases.
 
-Existen diversos métodos para seleccionar características entre los más utilizados se encuentran:
+Existen diversos métodos para seleccionar características, entre los más utilizados se encuentran:
 
 \begin{enumerate}
     \item Umbral de Frecuencia: Se mide para cada palabra $w$ del vocabulario, el número de documentos en que $w$ aparece. Aquellas palabras poco usadas, es decir, con pocos contextos de uso se eliminan. Es de esperar, que las palabras más frecuentes también aparezcan en documentos no vistos \citep{yang1997comparative}.
     
-    \item Ganancia de información: Se establecen como relevantes todas aquellas palabras con una GI mayor a cero. Esta técnica tiene un sesgo muy importante respecto al conjunto de entrenamiento, sobretodo si éste es pequeño \citep{yang1997comparative}.   
+    \item Ganancia de información: Se establecen como relevantes todas aquellas palabras con una ganancia mayor a cero. Esta técnica tiene un sesgo muy importante respecto al conjunto de entrenamiento, sobre todo si éste es pequeño \citep{yang1997comparative}.   
     \item Chi cuadrada: Es un test estadístico que mide la independencia entre un término $t$ y una clase $c$. Para cada término, una puntuación alta indica que la hipótesis nula de independencia debe ser rechazada y la ocurrencia del término y la clase son dependientes \citep{yang1997comparative}.
 \end{enumerate}
 

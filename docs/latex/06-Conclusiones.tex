@@ -2,32 +2,32 @@
 \chapter{Conclusiones y Trabajo Futuro}
 El aumento de datos estructural no es una tarea trivial ya que pertenece al área de generación de lenguaje natural. Se deben considerar muchos factores: la originalidad del texto, la diversidad, la conservación del estilo, la conservación de la etiqueta etc. 
 
-Con el objetivo general de ``Proponer  un  método  de  aumento  de  datos,  considerando  estilo  y  contenido  del texto, para mejorar la predicción de los modelos de aprendizaje profundo en las tareas de perfilado de autor", se presentaron diferentes estrategias de aumento de datos y se evaluaron en dos arquitecturas de aprendizaje profundo. 
+Con el objetivo general de ``Proponer un método de aumento de datos considerando  estilo y contenido del texto, para mejorar la predicción de los modelos de aprendizaje profundo en las tareas de perfilado de autor", se presentaron diferentes estrategias de aumento de datos y se evaluaron en dos arquitecturas de aprendizaje profundo. 
 
 Gracias a los experimentos realizados y al análisis de los resultados, se llegaron a las siguientes conclusiones.
 
 \section{Conclusiones}
 
-Nuestra primera conclusión es que el aumento de datos ayuda a los métodos basados en redes neuronales, al menos, en las dos arquitecturas evaluadas. Los métodos propuestos mejoran el resultado y dependen fuertemente del conjunto de datos.    
-  El método propuesto restringiendo el reemplazo es el que  obtiene mejores resultados. Este método conserva sin alteración las palabras con mayor puntuación $\chi^2$, sin embargo corre el riesgo de sobre ajuste conforme aumenta el número de documentos nuevos. Si se necesita un gran número de documentos el método basado en relaciones equivalentes es el ideal ya que ofrece un vocabulario más amplio mediante la elección de diferentes semillas (palabras relacionadas a la clase de interés). 
+Nuestra primera conclusión, es que el aumento de datos ayuda a los métodos basados en redes neuronales, al menos, en las dos arquitecturas evaluadas. Los métodos propuestos mejoran el resultado de clasificación y dependen fuertemente del conjunto de datos.
+El método propuesto restringiendo el reemplazo es el que  obtiene mejores resultados. Este método conserva, sin alteración, las palabras con mayor puntuación $\chi^2$, sin embargo, corre el riesgo de sobreajuste conforme aumenta el número de documentos nuevos. Sí se necesita un gran número de documentos, el método basado en relaciones equivalentes es el ideal, ya que ofrece un vocabulario más amplio mediante la elección de diferentes semillas (palabras relacionadas a la clase de interés). 
 
-Con respecto al efecto del aumento de datos en diferentes arquitecturas de red, el aumento de datos es de mayor beneficio para arquitecturas basadas en redes recurrentes, ya que consideran el texto como secuencia con valores dependientes en lugar de considerar características aisladas como es el caso de las redes convolucionales y los modelos lineales. En los modelos lineales se pudo observar un incremento significativo en los resultados de clasificación pero esto es debido a la importancia que se le está dando a la clase positiva y se logró comprobar con un modelo lineal que considera el desbalance; en donde la línea base es muy cercana a los valores que se pueden obtener realizando aumento de datos. Aún considerando este hecho es preferible realizar aumento de datos por los beneficios de regularización que ofrece.
+Con respecto al efecto del aumento de datos en diferentes arquitecturas de red, el aumento de datos, obtiene un efecto negativo para arquitecturas basadas en redes recurrentes, ya que consideran el texto como secuencia con valores dependientes en lugar de considerar características aisladas como es el caso de las redes convolucionales y los modelos lineales. Por consiguiente, la red convolucional fue mas robusta en los diferentes aumentos de datos. En los modelos lineales, fue posible observar un incremento significativo en los resultados de clasificación, pero esto es debido a la importancia que se le está dando a la clase positiva y se logró comprobar con un modelo lineal que considera el desbalance; en donde la línea base es muy cercana a los valores que se pueden obtener realizando aumento de datos. Aún considerando este hecho es preferible realizar aumento de datos por los beneficios de regularización que ofrece.
 
-Finalmente se pudo comprobar que es posible mejorar la predicción en el perfilado de depresión y anorexia, logrando una ganancia entre 1 y 5 puntos en términos de la métrica F1 en comparación con no realizar aumento de datos y una ganancia entre 1 y 3 puntos en comparación con otros métodos de aumento. Además fue posible igualar los resultados del estado del arte utilizando modelos neuronales menos complejos.
+Finalmente, se pudo comprobar que es posible mejorar la predicción en el perfilado de depresión y anorexia, logrando una ganancia porcentual entre 1 y 18\% en términos de la métrica F1 en comparación con no realizar aumento de datos y una ganancia entre 1 y 7\% en comparación con otros métodos de aumento. Además, fue posible igualar los resultados del estado del arte utilizando modelos neuronales menos complejos.
 
 
 \section{Trabajo futuro}
 
-Debido a las limitaciones de este proyecto, existen alternativas que no se estudiaron por ejemplo:
+Debido a las limitaciones de este proyecto, existen alternativas que no se estudiaron, por ejemplo:
 
 \begin{itemize}
     \item Explorar técnicas supervisadas basadas en parafraseo neuronal, estas técnicas pueden ofrecer una mayor calidad de generación de texto, la principal limitante es el costo computacional.
     
-    \item Explorar técnicas semi-supervisadas o auto-supervisadas, el aprendizaje auto-supervisado es una rama del aprendizaje computacional que ha demostrado ser una opción para obtener grandes cantidades de datos con etiquetas débiles, sin embargo exige contar con muchos recursos computacionales para poder ser implementado.
+    \item Explorar técnicas semi-supervisadas o auto-supervisadas, el aprendizaje auto-supervisado es una rama del aprendizaje computacional que ha demostrado ser una opción para obtener grandes cantidades de datos con etiquetas débiles, sin embargo, exige contar con muchos recursos computacionales para poder ser implementado.
     
     \item Evaluar el aumento de datos en otras tareas de clasificación similares como: detección de engaño, tendencias suicidas, lenguaje agresivo, entre otras.
     
-    \item Finalmente se pueden implementar los modelos del estado del arte para la detección de depresión y anorexia, mejorándolos mediante el aumento de datos.
+    \item Finalmente, se pueden implementar los modelos del estado del arte para la detección de depresión y anorexia, mejorándolos mediante el aumento de datos.
     
     
 \end{itemize}
