@@ -1,5 +1,5 @@
 \section{Algoritmos de clasificación}
-Se han utilizado diversos algoritmos de aprendizaje automático para la clasificación de textos, dentro de los más populares y frecuentemente utilizados como línea base son las máquinas de soporte vectorial o SVM por sus siglas en inglés. Por otro lado, respecto a las arquitecturas de aprendizaje profundo que se han empezado a emplear, se distinguen dos arquitecturas básicas: las redes recurrentes y las redes convolucionales. En esta sección se explican las generalidades de estos algoritmos. En \citep{Minaee2020} se puede encontrar una revisión más detallada del estado del arte en la clasificación de textos con aprendizaje profundo.
+Se han utilizado diversos algoritmos de aprendizaje automático para la clasificación de textos, dentro de los más populares y frecuentemente utilizados como línea base son las máquinas de soporte vectorial (SVM por sus siglas en inglés). Por otro lado, respecto a las arquitecturas de aprendizaje profundo que se han empezado a emplear, se distinguen dos arquitecturas básicas: las redes recurrentes y las redes convolucionales. En esta sección se explican las generalidades de estos algoritmos. En \citep{Minaee2020} se puede encontrar una revisión más detallada del estado del arte en la clasificación de textos con aprendizaje profundo.
 
 
 \subsection{Máquinas de Soporte Vectorial (SVM)}
@@ -19,7 +19,7 @@ Retomando las definiciones de \citep{boser1992training}, SVM encuentra una funci
     \end{cases}
 \]
 
-Para los ejemplos de entrenamiento el algoritmo encuentra una función de decisión $D(x)$ durante una fase de aprendizaje. Después del entrenamiento, la clasificación de patrones desconocidos es predicha de acuerdo a la siguiente regla:
+Para los ejemplos de entrenamiento el algoritmo encuentra una función de decisión $D(x)$ durante una fase de aprendizaje. Después del entrenamiento, la clasificación de patrones desconocidos es predicha de conforme a la siguiente regla:
 
 \begin{equation} \label{eq:svm_de}
 \begin{split}
@@ -34,14 +34,14 @@ Las funciones de decisión deben ser lineales en sus parámetros, pero no están
     D(x) = \sum_{i=1}^{N} w_i\phi_i(x) + b
 \end{equation}
 
-En la ecuación \ref{eq:percetron} $ \phi_i$ son funciones predefinidas de $x$ y $w_i$ y $b$ son los parámetros ajustables a aprender.
+En la ecuación \ref{eq:percetron}, $ \phi_i$ son funciones predefinidas de $x$ y $w_i$ y $b$ son los parámetros ajustables a aprender.
 
-En la formulación de \citep{boser1992training, cortes1995support} podemos encontrar como aproximar este tipo de funciones construyendo hiperplanos separados que maximicen un margen, mediante algoritmos de optimización numérica.
+En la formulación de \citep{boser1992training, cortes1995support} podemos encontrar la forma de  aproximar este tipo de funciones, construyendo hiperplanos separados que maximicen un margen  mediante algoritmos de optimización numérica.
 
-Las ventajas\footnote{Listadas en https://scikit-learn.org/stable/modules/svm.html} de SVM son: 
+Las ventajas\footnote{Listadas en https://scikit-learn.org/stable/modules/svm.html} de las SVM son: 
 \begin{itemize}
-    \item Son efectivas en espacios altamente dimensionales, como es el caso en la clasificación de textos.
-    \item Son efectivas en casos en donde el número de dimensiones es mayor al número de ejemplos.
+    \item Son efectivas en espacios altamente dimensionales, como sucede en la clasificación de textos.
+    \item Son efectivas en casos donde el número de dimensiones es mayor al número de ejemplos.
     \item Usa un subconjunto de puntos de entrenamiento en la función de decisión llamados vectores de soporte, así que es también eficiente en el uso de la memoria.
     \item Se pueden especificar diferentes funciones de núcleo para la función de decisión. 
 \end{itemize}
@@ -58,45 +58,42 @@ Las desventajas incluyen:
 
 \subsection{Redes neuronales profundas}
 
-En la definición de \citep{lecun2015deep}, el aprendizaje profundo permite a los modelos computacionales que están compuestos de múltiples capas de procesamiento aprender representaciones de los datos con múltiples niveles de abstracción. Estos métodos han mejorado dramáticamente el estado del arte en tareas para el entendimiento de lenguaje natural, particularmente en clasificación de textos, análisis de sentimientos, dar respuesta a preguntas y traducción automática. El aprendizaje profundo descubre estructuras en grandes conjuntos de datos utilizando el algoritmo de retro-propagación para determinar sus parámetros internos, que son utilizados para calcular la representación en cada capa de la arquitectura. 
+En la definición de \citep{lecun2015deep}, el aprendizaje profundo permite a los modelos computacionales que están compuestos de múltiples capas de procesamiento aprender representaciones de los datos con múltiples niveles de abstracción. Estos métodos han mejorado dramáticamente el estado del arte en tareas para el entendimiento de lenguaje natural, particularmente en clasificación de textos, análisis de sentimientos, dar respuesta a preguntas y traducción automática. El aprendizaje profundo descubre estructuras en grandes conjuntos de datos utilizando el algoritmo de retro-propagación para determinar sus parámetros internos los cuales son utilizados para calcular la representación en cada capa de la arquitectura. 
 
 A continuación, se describen los conceptos principales en aprendizaje profundo tomados principalmente de \citep{lecun2015deep}, para una definición más extensa consultar \citep{goodfellow2016deep, kamath2019deep}.
 
 \subsubsection{Retropropagación y entrenamiento de arquitecturas multicapa}
 
-Una arquitectura multicapa es una pila de modelos simples y muchos de estos calculan un mapeo entrada-salida no lineal. El procedimiento de retropropagación, calcula el gradiente de una función objetivo con respecto a los pesos de múltiples capas, es una aplicación práctica de la regla de la cadena para derivadas. 
-
-  
+Una arquitectura multicapa es una pila de modelos simples y muchos de estos calculan un mapeo entrada-salida no lineal. El procedimiento de retropropagación calcula el gradiente de una función objetivo con respecto a los pesos de múltiples capas, es una aplicación práctica de la regla de la cadena para derivadas. 
 
 Las arquitecturas multicapa aprenden a mapear una entrada de tamaño fijo (por ejemplo, la representación vectorial de un documento) a una salida de tamaño fijo (por ejemplo, las categorías de documentos). Para ir de una capa a la siguiente, un conjunto de unidades (nodos o neuronas) calculan una suma pesada de las entradas de la capa anterior y el resultado pasado es a través de una función no lineal. A la fecha, la función ReLU (\ref{eq:RELU})  es una de las más populares, ya que se ha demostrado empíricamente que permite aprender más rápido en redes neuronales con muchas capas \citep{glorot2011deep}. Las neuronas que no forman parte de la capa de entrada ni la de salida se conocen como unidades ocultas. 
 
-Las\textbf{ capas ocultas} pueden ser vistas como una distorsión de la entrada en una forma no lineal, para que las categorías sean linealmente separables por la última capa.
+Las\textbf{ capas ocultas} pueden ser vistas como una distorsión de la entrada en una forma no lineal, con el objetivo que las categorías sean linealmente separables por la última capa.
 
 \begin{equation} \label{eq:RELU}
     f(z)= max(z,0)
 \end{equation}
 
-La \textbf{capa de entrada} puede ser construida vía pesado \textit{TF-IDF}, vectores de palabras o alguna otra característica o representación. En la clasificación de documentos usualmente la capa de entrada recibe un documento en representación vectorial (\ref{eq:vectorspace}).
+La \textbf{capa de entrada} puede ser construida mediante pesado \textit{TF-IDF}, vectores de palabras, alguna otra característica o representación. En la clasificación de documentos usualmente la capa de entrada recibe un documento en representación vectorial (\ref{eq:vectorspace}).
 
 \begin{equation} \label{eq:vectorspace}
 d_{j} = (w_{1,j},w_{2,j},...,w_{i,j}...,w_{l_{j},j})
 \end{equation}
 
-En donde $l_{j}$ es el tamaño del documento $j$ y $w_{i,j}$ es la representación vectorial de la palabra $i$ en el documento $j$.
+Siendo $l_{j}$ es el tamaño del documento $j$ y $w_{i,j}$ es la representación vectorial de la palabra $i$ en el documento $j$.
 
-En la \textbf{capa de salida} el número de neuronas es igual al número de clases para clasificaciones con más de dos clases y una para clasificación binaria, la capa se salida, es la encargada de realizar la predicción final en base a las representaciones capturadas por la red neuronal.
+En la \textbf{capa de salida} el número de neuronas es igual al número de clases para clasificaciones con más de dos clases y una para clasificación binaria, la capa de salida, es la encargada de hacer la predicción final a partir de las representaciones capturadas por la red neuronal.
 
-La \textbf{inicialización} de los pesos y sesgo (bias) por lo general es con ceros o números generados con base en algún criterio, un algoritmo común es el conocido como inicialización Glorot o Xavier \citep{glorot2010understanding}, el cual es basado en números aleatorios extraídos de una distribución de probabilidad uniforme.
+La \textbf{inicialización} de los pesos y sesgo (bias) por lo general es con ceros o números generados con base en algún criterio, un algoritmo común es el conocido como inicialización Glorot o Xavier \citep{glorot2010understanding} el cual está basado en números aleatorios extraídos de una distribución de probabilidad uniforme.
 
 Cuando se entrena una red neuronal, la propagación hacia adelante es realizada en lotes o \textbf{batch} (un número de instancias de entrenamiento determinado por el hiperparámetro llamado tamaño de batch), después se calcula el error para cada neurona mediante retropropagación en el mismo lote. 
 
 Una \textbf{época} es una sola iteración sobre todo el conjunto de datos, el número de épocas es un hiperparámetro que determina cuantas veces el algoritmo de aprendizaje itera sobre todo el conjunto de entrenamiento.
 
-
 \subsubsection{Redes Neuronales Recurrentes (RNN)}
 Los modelos basados en RNNs tienen el objetivo principal de capturar la dependencia entre palabras y la estructura del texto para clasificación de textos \cite{goodfellow2016deep}.
 
-Las redes recurrentes procesan una secuencia $u_t$ como entrada, un elemento a la vez, manteniendo en sus neuronas ocultas un ``vector de estado" $x_t$, que implícitamente contiene información acerca de todos los elementos anteriores a la secuencia procesada \cite{lecun2015deep}. La formulación general de este concepto es presentada en la ecuación \ref{eq:rrn}, en donde $x_t$ es el vector de estado en tiempo $t$ y $u_t$ se refiere a la entrada en el paso $t$, siendo $\theta$ los parámetros a aprender.
+Las redes recurrentes procesan una secuencia $u_t$ como entrada, un elemento a la vez, manteniendo en sus neuronas ocultas un ``vector de estado" $x_t$ el cual implícitamente contiene información acerca de todos los elementos anteriores a la secuencia procesada \cite{lecun2015deep}. La formulación general de este concepto, es presentada en la ecuación \ref{eq:rrn}, donde $x_t$ es el vector de estado en tiempo $t$ y $u_t$ se refiere a la entrada en el paso $t$, siendo $\theta$ los parámetros a aprender.
 
 
 \begin{equation} \label{eq:rrn}
@@ -104,10 +101,10 @@ Las redes recurrentes procesan una secuencia $u_t$ como entrada, un elemento a l
 \end{equation}
 
 
-Las redes recurrentes son sistemas dinámicos muy poderosos, pero su entrenamiento es muy problemático dado que su gradiente al ser retropropagado crece o disminuye en cada paso, así que sobre cada paso típicamente explotan o desaparecen \citep{lecun2015deep}, para tratar de solucionar este problema se propuso un tipo especial de red recurrente conocida como LSTM por sus siglas en inglés (Long Short Term Memory).
+Las redes recurrentes son sistemas dinámicos muy poderosos, pero su entrenamiento es muy problemático dado que su gradiente al ser retropropagado crece o disminuye en cada paso, así que sobre cada paso típicamente explotan o desaparecen \citep{lecun2015deep}, para tratar de solucionar este problema se propuso un tipo especial de red recurrente conocida como LSTM, por sus siglas en inglés (Long Short Term Memory).
 
 \subsubsection{LSTM - Red de memoria a corto y largo plazo.}
-Propuestas originalmente por \citep{hochreiter1997long}, para tratar los problemas de explotación y desvanecimiento de gradientes en redes recurrentes. Las redes LSTM son un tipo especial de red recurrente que conserva las dependencias largas de maneras más efectivas en comparación con una red recurrente básica, utilizan múltiples capas para regular el monto de información que será permitida en cada estado de nodo. La figura \ref{fig:LSTM} muestra la estructura interna de una celda de una LSTM. En donde $x_t$, $o$ y $h_t$ representan la entrada, salida y el estado oculto en tiempo $t$. $c_{t-1}$ es la información llevada del estado $t-1$ al estado $t$, el cual será combinado con la entrada $x_t$ y el estado oculto $h_{t-1}$ para formar el estado oculto $h_t$ y el arrastre de $c_t$ el cual será enviado al siguiente paso.
+Propuestas originalmente por \citep{hochreiter1997long}, para tratar los problemas de explotación y desvanecimiento de gradientes en redes recurrentes. Las redes LSTM, son un tipo especial de red recurrente que conserva las dependencias largas de maneras más efectivas, en comparación con una red recurrente básica, utilizan múltiples capas para regular el monto de información que será permitida en cada estado de nodo. La figura \ref{fig:LSTM} muestra la estructura interna de una celda de una LSTM. Donde $x_t$, $o$ y $h_t$ representan la entrada, salida y el estado oculto en tiempo $t$. $c_{t-1}$ es la información llevada del estado $t-1$ al estado $t$, el cual será combinado con la entrada $x_t$ y el estado oculto $h_{t-1}$ para formar el estado oculto $h_t$ y el arrastre de $c_t$ el cual será enviado al siguiente paso.
 
 \input{sections/figures/lsmt_cell}
 
@@ -119,8 +116,8 @@ Las redes recurrentes convencionales consideran una estructura causal, significa
 
 Aunque originalmente fueron diseñadas para reconocimiento de caracteres en imágenes, las redes convolucionales han sido empleadas efectivamente para clasificación de textos \citep{kim2014convolutional, zhang2015character, zhang2015sensitivity, conneau2016very}. 
 
-En el contexto de clasificación de textos, el principal objetivo de este tipo de redes es capturar un contexto local de las palabras en el documento, mediante la aplicación de un conjunto de filtros de tamaño $h$x$d$. Si denotamos la dimensión de los vectores de palabras por $d$ y el tamaño de la secuencia de entrada como $s$, entonces la dimensión de la matriz de la secuencia es $s x d$ (véase la figura \ref{fig:cnn_kim}), se puede tratar la matriz de la secuencia como una imagen y realizar convoluciones sobre esta, vía filtros. Es razonable utilizar filtros con un ancho igual a la dimensión de los vectores de palabras (i.e., $d$). Así que solo varia la altura del filtro, i.e., el número de filas adyacentes identificado como \textbf{tamaño de filtro} o tamaño de núcleo \cite{zhang2015sensitivity}. 
+En el contexto de clasificación de textos, el principal objetivo de este tipo de redes es capturar un contexto local de las palabras en el documento, mediante la aplicación de un conjunto de filtros de tamaño $h$x$d$. Si denotamos la dimensión de los vectores de palabras por $d$ y el tamaño de la secuencia de entrada como $s$, entonces la dimensión de la matriz de la secuencia es $s x d$ (véase la figura \ref{fig:cnn_kim}), se puede tratar la matriz de la secuencia como una imagen y hacer las operaciones de convolución sobre esta, vía filtros. Es razonable utilizar filtros con un ancho igual a la dimensión de los vectores de palabras (i.e., $d$). Así que solo varia la altura del filtro, i.e., el número de filas adyacentes identificado como \textbf{tamaño de filtro} o tamaño de núcleo \cite{zhang2015sensitivity}. 
 
-Como se representa en la figura \ref{fig:cnn_kim}, los filtros forman capas de convolución, estas capas de convolución son llamadas mapas de características y pueden ser apiladas para proporcionar múltiples filtros de la entrada. Para reducir la complejidad computacional, las CNNs utilizan una operación llamada \textbf{pooling} la cual reduce el tamaño de la salida de una capa a la siguiente en la red. Existen diferentes técnicas de pooling para reducir la salida y conservar características importantes. El pooling más empleado es el método de \textbf{max pooling}, el cual selecciona el elemento máximo en la ventana de pooling. Para pasar la salida de las capas de pooling, los mapas son \textit{aplanados} en una columna. La capa final en una CNN es típicamente una capa totalmente conectada \cite{kowsari2019text}.
+Como se ilustra en la figura \ref{fig:cnn_kim}, los filtros forman capas de convolución, estas capas de convolución son llamadas mapas de características y pueden ser apiladas para proporcionar múltiples filtros de la entrada. Para reducir la complejidad computacional, las CNNs utilizan una operación llamada \textbf{pooling} la cual reduce el tamaño de la salida de una capa a la siguiente en la red. Existen diferentes técnicas de pooling para reducir la salida y conservar características importantes. El pooling más empleado es el método de \textbf{max pooling}, el cual selecciona el elemento máximo en la ventana de pooling. Para pasar la salida de las capas de pooling, los mapas son \textit{aplanados} en una columna. La capa final en una CNN es típicamente una capa totalmente conectada \cite{kowsari2019text}.
 
 \input{sections/figures/cnn_kim}
